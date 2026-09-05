@@ -1,0 +1,419 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-cinzel-dec: 'Cinzel Decorative', Georgia, serif;
+    --font-cinzel: 'Cinzel', Georgia, serif;
+    --font-marcellus: 'Marcellus', serif;
+    --font-rozha: 'Rozha One', serif;
+    --font-manuscript: 'Cormorant Garamond', Georgia, serif;
+    --font-philosopher: 'Philosopher', sans-serif;
+    --font-handwriting: 'Caveat', 'Nanum Pen Script', cursive, serif;
+    
+    --parchment-base: #f4ecd8;
+    --parchment-dark: #120c08;
+    --gold-ancient: #c5a059;
+    --gold-bright: #e6c275;
+    --maroon-kumkum: #5c1d24;
+    --maroon-deep: #3b1116;
+    --ink-sepia: #2a1d13;
+  }
+
+  body {
+    background-color: #0d0906;
+    color: #e8d8b8;
+    font-family: var(--font-manuscript);
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Typography Utilities */
+.font-cinzel-dec {
+  font-family: var(--font-cinzel-dec);
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+.font-marcellus {
+  font-family: var(--font-marcellus);
+}
+
+.font-rozha {
+  font-family: var(--font-rozha);
+}
+
+.font-manuscript {
+  font-family: var(--font-manuscript);
+}
+
+.font-philosopher {
+  font-family: var(--font-philosopher);
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting);
+}
+
+/* Archival Document & Manuscript Styles */
+.archival-ruled-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 27px,
+    rgba(142, 115, 82, 0.12) 28px
+  );
+}
+
+.archival-faint-grid {
+  background-image: 
+    linear-gradient(to right, rgba(160, 130, 95, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(160, 130, 95, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.archival-ink-stamp {
+  border: 1.5px dashed rgba(142, 56, 37, 0.55);
+  color: #8e3825;
+  transform: rotate(-3deg);
+  letter-spacing: 0.22em;
+}
+
+/* Gold Text Glow & Ancient Inscription effects */
+.text-gold-ancient {
+  color: #d4af37;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.35), 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.text-gold-emboss {
+  color: #f3e5ab;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.9), 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(180deg, #fff7d6 0%, #d4af37 50%, #aa8022 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+}
+
+/* Diya Flame & Ambient Animations */
+@keyframes diyaFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.92;
+    filter: drop-shadow(0 0 8px #ff9e2c) drop-shadow(0 0 16px #ff5100);
+  }
+  25% {
+    transform: scale(1.08, 0.95) rotate(1.5deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 12px #ffb347) drop-shadow(0 0 22px #ff4500);
+  }
+  50% {
+    transform: scale(0.96, 1.05) rotate(-2deg);
+    opacity: 0.88;
+    filter: drop-shadow(0 0 7px #ff8c00) drop-shadow(0 0 14px #e63900);
+  }
+  75% {
+    transform: scale(1.04, 0.98) rotate(0.8deg);
+    opacity: 0.96;
+    filter: drop-shadow(0 0 10px #ffa500) drop-shadow(0 0 18px #ff3b00);
+  }
+}
+
+.animate-diya-flame {
+  animation: diyaFlicker 1.8s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes pulseHalo {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 3s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+@keyframes birdFly {
+  0% {
+    transform: translate(-10vw, 0px) scale(0.7);
+  }
+  50% {
+    transform: translate(50vw, -15px) scale(0.8);
+  }
+  100% {
+    transform: translate(110vw, -5px) scale(0.7);
+  }
+}
+
+.animate-bird-flight {
+  animation: birdFly 45s linear infinite;
+}
+
+/* Antique Manuscript Vignette and Grain */
+.parchment-vignette {
+  box-shadow: inset 0 0 140px rgba(18, 12, 8, 0.85), inset 0 0 60px rgba(18, 12, 8, 0.95);
+}
+
+.border-ancient-gold {
+  border-color: rgba(197, 160, 89, 0.4);
+}
+
+/* Antique Button Styling */
+.btn-antique-journey {
+  background: linear-gradient(180deg, #5c181f 0%, #3a0d12 100%);
+  border: 1px solid #c5a059;
+  box-shadow: 0 0 15px rgba(197, 160, 89, 0.25), inset 0 1px 0 rgba(255, 230, 160, 0.3), inset 0 -2px 0 rgba(0, 0, 0, 0.6);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-antique-journey:hover {
+  background: linear-gradient(180deg, #741e27 0%, #4b1219 100%);
+  border-color: #ffd27d;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.6);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-antique-journey::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 235, 179, 0.25), transparent);
+  transition: 0.6s ease;
+}
+
+.btn-antique-journey:hover::before {
+  left: 100%;
+}
+
+/* Subtle Animated Golden Shimmer for Hovered State Boundary */
+@keyframes antiqueGoldShimmer {
+  0%, 100% {
+    stroke: #D4A72C;
+    filter: drop-shadow(0 0 2px rgba(212, 167, 44, 0.7));
+  }
+  50% {
+    stroke: #FFD27D;
+    filter: drop-shadow(0 0 4.5px rgba(255, 210, 100, 0.95));
+  }
+}
+
+.state-path-hovered {
+  animation: antiqueGoldShimmer 2.2s ease-in-out infinite;
+}
+
+/* Drifting ancient golden dust particles for dark hero */
+@keyframes antiqueDriftUp {
+  0% {
+    transform: translateY(105vh) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(50vh) translateX(18px);
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-5vh) translateX(-15px);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Heritage Breathing Heartbeat Animation for Large Navigation Icons
+   ========================================================================== */
+@keyframes heritagePulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(212, 169, 72, 0.28)) drop-shadow(0 0 15px rgba(212, 169, 72, 0.12));
+  }
+  15% {
+    transform: scale(1.025);
+    filter: drop-shadow(0 0 16px rgba(212, 169, 72, 0.65)) drop-shadow(0 0 32px rgba(255, 210, 125, 0.30));
+  }
+  30% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(212, 169, 72, 0.30)) drop-shadow(0 0 16px rgba(212, 169, 72, 0.14));
+  }
+  45% {
+    transform: scale(1.018);
+    filter: drop-shadow(0 0 12px rgba(212, 169, 72, 0.50)) drop-shadow(0 0 25px rgba(255, 210, 125, 0.22));
+  }
+  65%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(212, 169, 72, 0.28)) drop-shadow(0 0 15px rgba(212, 169, 72, 0.12));
+  }
+}
+
+@keyframes haloBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+    box-shadow:
+      0 0 20px rgba(214, 169, 70, 0.20),
+      0 0 45px rgba(214, 169, 70, 0.10),
+      inset 0 0 22px rgba(214, 169, 70, 0.08);
+  }
+  15% {
+    transform: scale(1.03);
+    opacity: 1;
+    box-shadow:
+      0 0 28px rgba(214, 169, 70, 0.35),
+      0 0 55px rgba(255, 215, 120, 0.20),
+      inset 0 0 26px rgba(214, 169, 70, 0.14);
+  }
+  30% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  45% {
+    transform: scale(1.02);
+    opacity: 0.95;
+  }
+  65%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+}
+
+.heritage-icon-pulse {
+  animation: heritagePulse 3.2s ease-in-out infinite;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+}
+
+/* Staggered animation delays for the five categories */
+.heritage-category-item:nth-child(1) .heritage-icon-pulse,
+.heritage-category-item:nth-child(1) .heritage-halo-aura {
+  animation-delay: 0s;
+}
+.heritage-category-item:nth-child(2) .heritage-icon-pulse,
+.heritage-category-item:nth-child(2) .heritage-halo-aura {
+  animation-delay: 0.35s;
+}
+.heritage-category-item:nth-child(3) .heritage-icon-pulse,
+.heritage-category-item:nth-child(3) .heritage-halo-aura {
+  animation-delay: 0.7s;
+}
+.heritage-category-item:nth-child(4) .heritage-icon-pulse,
+.heritage-category-item:nth-child(4) .heritage-halo-aura {
+  animation-delay: 1.05s;
+}
+.heritage-category-item:nth-child(5) .heritage-icon-pulse,
+.heritage-category-item:nth-child(5) .heritage-halo-aura {
+  animation-delay: 1.4s;
+}
+
+/* Antique Golden Circular Halo Ring */
+.heritage-halo-aura {
+  position: absolute;
+  width: 108%;
+  height: 108%;
+  top: -4%;
+  left: -4%;
+  border-radius: 50%;
+  border: 1px solid rgba(214, 169, 70, 0.45);
+  box-shadow:
+    0 0 20px rgba(214, 169, 70, 0.20),
+    0 0 45px rgba(214, 169, 70, 0.10),
+    inset 0 0 22px rgba(214, 169, 70, 0.08);
+  pointer-events: none;
+  animation: haloBreathe 3.2s ease-in-out infinite;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+.heritage-halo-aura::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1px dashed rgba(214, 169, 70, 0.22);
+  pointer-events: none;
+}
+
+/* Category Group Interaction - Unified Smooth Hover Scale */
+.heritage-category-item {
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.heritage-category-item:hover {
+  transform: scale(1.18);
+  z-index: 30;
+}
+
+/* Hover Interaction: Maintain continuous heartbeat pulse while brightening radiance */
+.heritage-category-item:hover .heritage-icon-pulse {
+  filter: drop-shadow(0 0 24px rgba(255, 215, 120, 0.95)) drop-shadow(0 0 50px rgba(214, 169, 70, 0.55));
+}
+
+.heritage-category-item:hover .heritage-halo-aura {
+  border-color: rgba(255, 215, 120, 0.75);
+  box-shadow:
+    0 0 35px rgba(255, 215, 120, 0.45),
+    0 0 70px rgba(214, 169, 70, 0.30),
+    inset 0 0 28px rgba(255, 215, 120, 0.22);
+}
+
+.heritage-category-label {
+  white-space: nowrap;
+}
+
+.heritage-category-item:hover .heritage-category-label {
+  color: #ffd899;
+  text-shadow: 0 0 16px rgba(255, 215, 120, 0.8), 0 3px 10px rgba(0, 0, 0, 0.95);
+}
+
+.heritage-category-item:hover .heritage-category-ornament {
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 120, 0.85));
+}
+
+/* Subtle Golden Heartbeat Energy Wave Line Animation */
+@keyframes goldenEnergyBreathe {
+  0%, 100% {
+    opacity: 0.65;
+    filter: drop-shadow(0 0 3px rgba(214, 169, 70, 0.35));
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 120, 0.75));
+  }
+}
+
+.heritage-energy-line {
+  animation: goldenEnergyBreathe 4s ease-in-out infinite;
+}
+
