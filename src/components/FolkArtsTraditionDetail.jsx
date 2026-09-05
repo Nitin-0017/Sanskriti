@@ -1,301 +1,603 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Sparkles, Compass, Eye, Shield, Feather, BookOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Feather, Compass, BookOpen, Layers } from 'lucide-react';
+import { HARYANA_FOLK_CHAPTERS } from '../data/folkArtsData';
 
 /**
  * FolkArtsTraditionDetail
- * Dedicated chapter page for an individual Haryana Folk Art tradition
- * Displays tailored journey, contextual materials, "The Language of Motifs",
- * living masters, and community rituals.
+ * Dedicated Editorial Monograph Page for an individual Haryana Folk Art.
+ *
+ * Organized strictly as a cinematic heritage journey:
+ * 1. Origin / Story (Historical roots, oral continuum, agrarian memory)
+ * 2. Materials (Tactile ingredients from the soil, no boxed cards)
+ * 3. Motifs (Specimen archive with visual analysis, sacred geometry)
+ * 4. Technique (Master methodology, tactile craftsmanship)
+ * 5. Tradition / Cultural Meaning (Ritual context, bridal & seasonal settings, community transmission)
+ * 6. Artisans / Practitioners (Living master documentary portrait, quote, narrative)
+ * 7. Present Day / Preservation (GI status, design academy revivals, living continuum)
+ *
+ * Editorial & Museum Aesthetics:
+ * - Large typography (18–22px body text, 32–56px section titles)
+ * - Generous vertical whitespace (space-y-32 sm:space-y-40)
+ * - Open layouts without boxy cards or cluttering borders
+ * - Warm antique gold, dark parchment, and muted amber palette
  */
+// Clean Heritage Vector Divider (Archival SVG replacement for unicode glyphs)
+function FolkHeritageDivider({ className = "my-10" }) {
+  return (
+    <div className={`flex items-center justify-center gap-4 text-[#c5a059]/40 ${className}`}>
+      <span className="w-16 sm:w-32 h-[1px] bg-gradient-to-r from-transparent to-[#c5a059]/35" />
+      <svg className="w-3 h-3 text-[#c5a059]/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <polygon points="12,3 21,12 12,21 3,12" />
+        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+      </svg>
+      <span className="w-16 sm:w-32 h-[1px] bg-gradient-to-l from-transparent to-[#c5a059]/35" />
+    </div>
+  );
+}
+
 export default function FolkArtsTraditionDetail({
   tradition,
   onBackToArchive,
-  onNavigateNextTradition,
+  onNavigateTradition,
 }) {
-  const [selectedMotif, setSelectedMotif] = useState(
-    tradition.motifs && tradition.motifs.length > 0 ? tradition.motifs[0] : null
-  );
+  const [selectedMotifIndex, setSelectedMotifIndex] = useState(0);
 
   if (!tradition) return null;
 
+  const currentMotif = tradition.motifs && tradition.motifs.length > 0 
+    ? tradition.motifs[selectedMotifIndex] || tradition.motifs[0]
+    : null;
+
+  // Find index in HARYANA_FOLK_CHAPTERS for previous/next navigation
+  const currentIndex = HARYANA_FOLK_CHAPTERS.findIndex((item) => item.id === tradition.id);
+  const prevTradition = currentIndex > 0 ? HARYANA_FOLK_CHAPTERS[currentIndex - 1] : null;
+  const nextTradition = currentIndex < HARYANA_FOLK_CHAPTERS.length - 1 ? HARYANA_FOLK_CHAPTERS[currentIndex + 1] : null;
+
+  // Find related tradition objects
+  const relatedTraditionObjs = (tradition.relatedArts || []).map((id) => 
+    HARYANA_FOLK_CHAPTERS.find((item) => item.id === id)
+  ).filter(Boolean);
+
   return (
-    <div className="space-y-16 pb-20">
-      {/* Top Floating Archival Dossier Bar */}
+    <div className="space-y-32 sm:space-y-40 pb-36 text-[#f7e6c4]">
+      
+      {/* ====================================================================
+          TOP ARCHIVAL BREADCRUMB & PROVENANCE BAR
+          ==================================================================== */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#c5a059]/25">
         <button
           onClick={onBackToArchive}
-          className="group flex items-center gap-2.5 px-4 py-2 rounded-full border border-[#c5a059]/40 bg-[#160c07]/90 hover:bg-[#c5a059] text-[#ffd27d] hover:text-[#120a05] text-xs font-cinzel tracking-[0.2em] transition-all cursor-pointer shadow-[0_4px_18px_rgba(0,0,0,0.8)]"
+          className="group inline-flex items-center gap-2.5 text-xs font-cinzel text-[#ffd27d] hover:text-[#fff0d0] tracking-[0.24em] uppercase transition-colors cursor-pointer font-semibold"
         >
-          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-          <span>← RETURN TO FOLK ARTS ARCHIVE</span>
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#c5a059]" />
+          <span>← BACK TO FOLK ARTS JOURNEY</span>
         </button>
 
-        <div className="flex items-center gap-3 text-[11px] font-cinzel text-[#c5a059]/80 tracking-widest">
-          <span className="px-2.5 py-1 rounded bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#ffd27d]">
+        <div className="flex items-center gap-3 text-xs font-cinzel text-[#c5a059] tracking-widest uppercase">
+          <span className="px-3 py-1 rounded-full bg-[#1c0f08] border border-[#c5a059]/40 text-[#ffd27d]">
             {tradition.accession}
           </span>
+          <span className="hidden sm:inline">·</span>
           <span>{tradition.region}</span>
+          <span className="hidden sm:inline">·</span>
+          <span className="text-[#ffd27d]">{tradition.period}</span>
         </div>
       </div>
 
-      {/* Editorial Chapter Header */}
-      <div className="space-y-4 max-w-4xl">
-        <div className="flex items-center gap-3">
-          <span className="w-8 h-[1px] bg-[#c5a059]" />
-          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.3em] uppercase font-semibold">
-            FOLK ART DOSSIER · {tradition.num}
-          </span>
-        </div>
-
-        <h1 className="font-cinzel text-4xl sm:text-6xl text-[#ffd27d] font-normal tracking-wide leading-tight">
-          {tradition.title}
-        </h1>
-
-        <p className="font-cormorant italic text-xl sm:text-2xl text-[#f3e7ce]">
-          {tradition.vernacular}
-        </p>
-
-        <p className="text-xs sm:text-sm font-cinzel text-[#d4b068] tracking-[0.22em] uppercase">
-          {tradition.subtitle}
-        </p>
-
-        <p className="font-cormorant italic text-lg sm:text-xl text-[#e8c87c] pt-2 border-l-2 border-[#c5a059]/40 pl-4">
-          {tradition.tagline}
-        </p>
-      </div>
-
-      {/* Main Archival Plate Split: Left Heroic Plate, Right Curated Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left: Large Museum Plate Display */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="relative rounded-2xl overflow-hidden border border-[#c5a059]/35 shadow-[0_16px_50px_rgba(0,0,0,0.9)] aspect-[16/11] bg-[#140b07] group">
-            <img
-              src={tradition.image}
-              alt={tradition.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#080402] via-[#080402]/30 to-transparent" />
-            <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between text-[11px] font-cinzel text-[#ffd27d] tracking-widest uppercase">
-              <span>PROVENANCE: {tradition.region}</span>
-              <span>{tradition.period}</span>
-            </div>
+      {/* ====================================================================
+          HERO SECTION
+          Monumental editorial serif typography, vernacular script, wide plate
+          ==================================================================== */}
+      <section className="space-y-10">
+        <div className="space-y-5 max-w-5xl">
+          <div className="flex items-center gap-3">
+            <span className="w-12 sm:w-20 h-[1px] bg-gradient-to-r from-[#c5a059] to-transparent" />
+            <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.32em] uppercase font-semibold">
+              CHAPTER {tradition.num} · {tradition.archetype}
+            </span>
           </div>
 
-          {/* Plate Provenance Card */}
-          <div className="p-5 rounded-xl bg-[#180e08]/90 border border-[#c5a059]/25 backdrop-blur-md grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-cinzel">
-            <div>
-              <span className="text-[#a0824b] text-[10px] uppercase tracking-wider block">MEDIUM</span>
-              <span className="text-[#f7ebd4] font-medium">{tradition.medium}</span>
-            </div>
-            <div>
-              <span className="text-[#a0824b] text-[10px] uppercase tracking-wider block">HISTORIC PERIOD</span>
-              <span className="text-[#f7ebd4] font-medium">{tradition.period}</span>
-            </div>
-            <div className="col-span-2 sm:col-span-1">
-              <span className="text-[#a0824b] text-[10px] uppercase tracking-wider block">CRAFT CENTRES</span>
-              <span className="text-[#f7ebd4] font-medium">{tradition.region}</span>
-            </div>
-          </div>
-        </div>
+          <h1 
+            className="font-cinzel text-5xl sm:text-7xl lg:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] via-[#f7dca1] to-[#cf9e48] font-normal tracking-tight leading-[0.95]"
+            style={{ filter: 'drop-shadow(0 4px 18px rgba(0,0,0,0.95))' }}
+          >
+            {tradition.title}
+          </h1>
 
-        {/* Right: Narrative Context & Cultural Essence */}
-        <div className="lg:col-span-5 space-y-6 p-7 sm:p-9 rounded-2xl bg-[#140b07]/85 border border-[#c5a059]/30 backdrop-blur-md shadow-[0_8px_35px_rgba(0,0,0,0.85)]">
-          <div className="flex items-center gap-2 text-xs font-cinzel text-[#c5a059] tracking-widest uppercase">
-            <BookOpen className="w-4 h-4 text-[#ffd27d]" />
-            <span>CURATORIAL OVERVIEW</span>
-          </div>
-
-          <h3 className="font-cormorant text-2xl sm:text-3xl text-[#fff0d0] font-medium leading-snug">
-            {tradition.shortDesc}
-          </h3>
-
-          <p className="font-cormorant text-base sm:text-lg text-[#e8d8b8] leading-relaxed">
-            {tradition.overview}
+          <p className="font-cormorant italic text-2xl sm:text-3xl lg:text-4xl text-[#ffd27d]">
+            {tradition.vernacular}
           </p>
 
-          <div className="pt-3 border-t border-[#c5a059]/20 flex items-center justify-between text-xs font-cinzel text-[#ffd27d]">
-            <span className="tracking-widest uppercase">HARYANA LIVING CANVAS</span>
-            <span className="text-[#c5a059]">ARCHIVE PLATE {tradition.num}</span>
+          <p className="text-xs sm:text-sm font-cinzel text-[#e8c46a] tracking-[0.24em] uppercase pt-1 font-semibold">
+            {tradition.subtitle}
+          </p>
+
+          {/* Curatorial Pull Quote */}
+          <blockquote className="border-l-2 border-[#c5a059] pl-6 sm:pl-8 py-2 my-6 font-cormorant italic text-2xl sm:text-3xl md:text-4xl text-[#fff0d0] leading-relaxed max-w-5xl">
+            {tradition.tagline}
+          </blockquote>
+        </div>
+
+        {/* Full-Width Panoramic Archival Plate with subtle golden framing */}
+        <div className="relative rounded-2xl overflow-hidden border border-[#c5a059]/40 shadow-[0_25px_70px_rgba(0,0,0,0.95)] aspect-[16/9] sm:aspect-[21/9] bg-[#140b07] group">
+          <img
+            src={tradition.image}
+            alt={tradition.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0503] via-[#0a0503]/30 to-transparent" />
+          <div className="absolute bottom-4 sm:bottom-6 left-6 sm:left-8 right-6 sm:right-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-cinzel text-[#ffd27d] tracking-widest uppercase">
+            <span>PROVENANCE: {tradition.region}</span>
+            <span className="text-[#c5a059]">MEDIUM: {tradition.medium}</span>
           </div>
         </div>
-      </div>
 
-      {/* Tailored Narrative Milestone Journey */}
-      <div className="space-y-12 pt-6">
-        {tradition.sections.map((sec, idx) => (
-          <div
-            key={sec.id || idx}
-            className="p-8 sm:p-10 rounded-2xl bg-[#140b07]/80 border border-[#c5a059]/25 backdrop-blur-md shadow-[0_8px_35px_rgba(0,0,0,0.85)] space-y-6"
-          >
-            <div className="flex items-center justify-between gap-4 border-b border-[#c5a059]/20 pb-4">
-              <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold">
-                {sec.title}
+        {/* Curatorial Overview Narrative */}
+        <div className="max-w-5xl pt-4">
+          <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+            {tradition.overview}
+          </p>
+        </div>
+      </section>
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 1: ORIGIN / STORY
+          Ancient lineage, historical context, oral continuity
+          ==================================================================== */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-start">
+        <div className="lg:col-span-5 space-y-4">
+          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+            STAGE 01 · ORIGIN & ANCIENT STORY
+          </span>
+          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+            An Unbroken Lineage of Agrarian Devotion
+          </h2>
+          <p className="text-xs font-cinzel text-[#c5a059]/80 tracking-widest uppercase">
+            DOCUMENTED RECORD: {tradition.period}
+          </p>
+        </div>
+
+        <div className="lg:col-span-7 space-y-6">
+          <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+            {tradition.originHistory}
+          </p>
+        </div>
+      </section>
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 2: MATERIALS
+          Earth-harvested raw elements (NO boxy cards, generous open flow)
+          ==================================================================== */}
+      <section className="space-y-12">
+        <div className="space-y-4 max-w-4xl">
+          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+            STAGE 02 · TRADITIONAL MATERIALS
+          </span>
+          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+            Harvested Directly from the Agrarian Soil
+          </h2>
+          <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce]/90 leading-relaxed">
+            Every material in this tradition connects directly to the surrounding countryside—canal silt, home-spun cotton, wild silk filaments, and tree resins:
+          </p>
+        </div>
+
+        {/* Three Open Material Columns with large text and generous spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-14 pt-4 border-t border-[#c5a059]/20">
+          {tradition.materials.map((mat, i) => (
+            <div key={mat.name} className="space-y-4">
+              <span className="font-cinzel text-3xl sm:text-4xl text-[#c5a059] font-bold block">
+                0{i + 1}
               </span>
-              <span className="w-12 h-[1px] bg-gradient-to-r from-[#c5a059]/60 to-transparent" />
+              <h3 className="font-cinzel text-xl sm:text-2xl text-[#fff0d0] font-semibold">
+                {mat.name}
+              </h3>
+              <p className="font-cormorant text-xl text-[#e8d8b8] leading-relaxed">
+                {mat.desc}
+              </p>
+              <div className="pt-2 text-xs font-cinzel text-[#ffd27d] tracking-wider uppercase border-t border-[#c5a059]/20">
+                PROVENANCE: {mat.source}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 3: MOTIFS
+          Hierarchy: Folk Art → its Motifs → individual Motif details
+          Large visual focus on the left, rich cultural storytelling on the right
+          ==================================================================== */}
+      <section className="space-y-12">
+        <div className="space-y-4 max-w-5xl">
+          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+            STAGE 03 · SACRED MOTIFS & SYMBOLS
+          </span>
+          <h2 className="font-cinzel text-3xl sm:text-5xl text-[#ffd27d] font-normal leading-tight">
+            The Living Visual Lexicon: Sacred Motifs
+          </h2>
+          <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce]/95 leading-relaxed">
+            Every motif in this tradition was born out of agrarian necessity, cosmic observation, and ancestral blessing. Select a motif below to examine its geometry, ritual placement, and execution:
+          </p>
+        </div>
+
+        {/* Visually Meaningful Motif Selector Badges (Thumbnails + Labels) */}
+        {tradition.motifs && tradition.motifs.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-b border-[#c5a059]/20 pb-6">
+            {tradition.motifs.map((motif, idx) => {
+              const isSelected = selectedMotifIndex === idx;
+              return (
+                <button
+                  key={motif.name}
+                  onClick={() => setSelectedMotifIndex(idx)}
+                  className={`group flex items-center gap-3.5 p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#221209] border-[#ffd27d] shadow-[0_0_25px_rgba(201,164,90,0.4)] ring-1 ring-[#ffd27d]'
+                      : 'bg-[#150a05]/90 border-[#c5a059]/25 hover:border-[#ffd27d]/60 hover:bg-[#1f0e07]'
+                  }`}
+                >
+                  {/* Miniature Archival Thumbnail */}
+                  <div className="w-14 h-14 rounded-xl overflow-hidden border border-[#c5a059]/40 bg-[#0d0704] shrink-0 relative">
+                    <img
+                      src={motif.image || tradition.image}
+                      alt={motif.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-[#ffd27d]/15 border-2 border-[#ffd27d] rounded-xl pointer-events-none" />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] font-cinzel text-[#c5a059] tracking-wider block">
+                      MOTIF 0{idx + 1}
+                    </span>
+                    <h4 className={`text-xs font-cinzel tracking-wide truncate font-semibold transition-colors ${
+                      isSelected ? 'text-[#ffd27d]' : 'text-[#f3e7ce] group-hover:text-[#ffd27d]'
+                    }`}>
+                      {motif.name.split('(')[0]}
+                    </h4>
+                    <span className="text-[11px] font-cormorant italic text-[#e8c87c] truncate block">
+                      {motif.vernacular.split('•')[0]}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Active Motif Specimen Exhibition (Large Visual on Left, Deep Story on Right) */}
+        {currentMotif && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-start pt-4">
+            
+            {/* Left: Large Beautiful Visual of the Actual Motif (Main Visual Focus) */}
+            <div className="lg:col-span-6 relative">
+              <div className="relative rounded-2xl overflow-hidden border border-[#c5a059]/45 shadow-[0_25px_70px_rgba(0,0,0,0.95)] aspect-[4/3] bg-[#120804] group">
+                <img
+                  src={currentMotif.image || tradition.image}
+                  alt={currentMotif.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#090402] via-transparent to-transparent opacity-75" />
+                
+                {/* Provenance & Specimen Badge Overlay */}
+                <div className="absolute top-4 left-5 px-3 py-1 rounded-full bg-[#180b06]/90 border border-[#c5a059]/40 text-[#ffd27d] text-[10px] font-cinzel tracking-widest uppercase">
+                  SPECIMEN NO. HR-MOTIF-0{selectedMotifIndex + 1} · ARCHIVAL RECORD
+                </div>
+
+                <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-xs font-cinzel text-[#ffd27d] tracking-widest uppercase">
+                  <span className="font-cormorant italic text-lg text-[#f7e6c4] normal-case">
+                    {currentMotif.vernacular}
+                  </span>
+                  <span className="text-[#c5a059]">{tradition.region.split(',')[0]}</span>
+                </div>
+              </div>
+
+              {/* Caption beneath visual */}
+              <div className="pt-3 flex items-center justify-between text-[11px] font-cinzel text-[#c5a059]/80 tracking-wider">
+                <span>AUTHENTIC HARYANA FOLK ICONOGRAPHY</span>
+                <span>MOTIF 0{selectedMotifIndex + 1} OF 0{tradition.motifs.length}</span>
+              </div>
             </div>
 
-            <h3 className="font-cinzel text-2xl sm:text-3xl text-[#ffd27d] font-normal tracking-wide">
-              {sec.heading}
-            </h3>
-
-            {sec.text && (
-              <p className="font-cormorant text-lg sm:text-xl text-[#eeddc0] leading-relaxed max-w-4xl">
-                {sec.text}
-              </p>
-            )}
-
-            {/* Contextual Material Cards (Materials belonging INSIDE the art form!) */}
-            {sec.items && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-3">
-                {sec.items.map((item, iIndex) => (
-                  <div
-                    key={iIndex}
-                    className="p-5 rounded-xl bg-[#1a0e08]/85 border border-[#c5a059]/25 hover:border-[#ffd27d]/60 transition-all space-y-2 shadow-[0_4px_20px_rgba(0,0,0,0.7)]"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#c5a059]" />
-                      <h4 className="font-cinzel text-sm text-[#ffd27d] tracking-wider uppercase font-semibold">
-                        {item.name}
-                      </h4>
-                    </div>
-                    <p className="font-cormorant text-sm sm:text-base text-[#e0cfb0] leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Master Artisan Spotlight */}
-            {sec.masterArtisan && (
-              <div className="p-6 sm:p-8 rounded-xl bg-[#1c0f08]/90 border border-[#c5a059]/40 space-y-4 shadow-[0_6px_25px_rgba(0,0,0,0.8)]">
-                <div className="flex items-center justify-between text-xs font-cinzel text-[#c5a059] tracking-widest">
-                  <span className="uppercase">LIVING MASTER SPOTLIGHT</span>
-                  <span>{sec.masterArtisan.location}</span>
-                </div>
-                <h4 className="font-cinzel text-xl sm:text-2xl text-[#ffd27d]">
-                  {sec.masterArtisan.name}
-                </h4>
-                <p className="font-cormorant italic text-lg text-[#f3e7ce] border-l-2 border-[#c5a059] pl-4">
-                  {sec.masterArtisan.quote}
-                </p>
-                <p className="font-cormorant text-base text-[#e8d8b8] leading-relaxed">
-                  {sec.masterArtisan.bio}
+            {/* Right: Detailed Cultural Information & Meanings */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="space-y-2 border-b border-[#c5a059]/20 pb-4">
+                <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+                  MOTIF SPECIMEN 0{selectedMotifIndex + 1}
+                </span>
+                <h3 className="font-cinzel text-3xl sm:text-4xl text-[#fff0d0] font-normal leading-tight">
+                  {currentMotif.name}
+                </h3>
+                <p className="font-cormorant italic text-2xl sm:text-3xl text-[#ffd27d]">
+                  {currentMotif.vernacular}
                 </p>
               </div>
-            )}
 
-            {/* "THE LANGUAGE OF MOTIFS" - Dedicated Interactive Specimen Section */}
-            {sec.hasMotifSpecimens && tradition.motifs && (
-              <div className="pt-4 space-y-6">
-                <div className="flex items-center gap-3">
-                  <Feather className="w-4 h-4 text-[#ffd27d]" />
-                  <span className="text-xs font-cinzel text-[#ffd27d] tracking-[0.24em] uppercase">
-                    INTERACTIVE MOTIF SPECIMEN ARCHIVE
+              {/* Symbolic Meaning (Pull Quote) */}
+              <div className="space-y-2">
+                <span className="text-xs font-cinzel text-[#c5a059] tracking-widest uppercase font-semibold block">
+                  SYMBOLIC MEANING & PHILOSOPHY
+                </span>
+                <blockquote className="font-cormorant italic text-2xl sm:text-3xl text-[#ffe196] border-l-2 border-[#e5a93c] pl-5 my-2 leading-relaxed">
+                  “{currentMotif.symbolism}”
+                </blockquote>
+              </div>
+
+              {/* Cultural Significance */}
+              {currentMotif.significance && (
+                <div className="space-y-2 pt-1">
+                  <span className="text-xs font-cinzel text-[#c5a059] tracking-widest uppercase font-semibold block">
+                    CULTURAL SIGNIFICANCE
                   </span>
+                  <p className="font-cormorant text-xl text-[#f3e7ce] leading-relaxed">
+                    {currentMotif.significance}
+                  </p>
                 </div>
+              )}
 
-                {/* Motif Specimen Selectors */}
-                <div className="flex flex-wrap gap-2.5">
-                  {tradition.motifs.map((motif, mIdx) => (
-                    <button
-                      key={mIdx}
-                      onClick={() => setSelectedMotif(motif)}
-                      className={`px-4 py-2 rounded-full text-xs font-cinzel tracking-wider uppercase transition-all cursor-pointer ${
-                        selectedMotif?.name === motif.name
-                          ? 'bg-[#c5a059] text-[#140b07] font-bold shadow-[0_0_18px_rgba(197,160,89,0.5)]'
-                          : 'bg-[#1c0f08]/80 text-[#ffd27d]/80 border border-[#c5a059]/30 hover:bg-[#c5a059]/20 hover:text-[#ffd27d]'
-                      }`}
-                    >
-                      {motif.name.split(' (')[0]}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Selected Motif Specimen Inspection Card */}
-                {selectedMotif && (
-                  <motion.div
-                    key={selectedMotif.name}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35 }}
-                    className="p-7 sm:p-9 rounded-2xl bg-[#1c0f08]/95 border border-[#c5a059]/45 backdrop-blur-md shadow-[0_12px_40px_rgba(0,0,0,0.9)] grid grid-cols-1 md:grid-cols-12 gap-6 items-center"
-                  >
-                    {/* Left: Specimen Symbolic Motif Plate */}
-                    <div className="md:col-span-4 p-6 rounded-xl bg-[#140b07] border border-[#c5a059]/30 flex flex-col items-center text-center space-y-3">
-                      <div className="w-20 h-20 rounded-full border border-[#c5a059]/40 flex items-center justify-center bg-[#201109] shadow-[inset_0_0_20px_rgba(197,160,89,0.2)]">
-                        <Sparkles className="w-8 h-8 text-[#ffd27d] animate-pulse" />
-                      </div>
-                      <div className="space-y-1">
-                        <h5 className="font-cinzel text-base text-[#ffd27d] font-semibold">
-                          {selectedMotif.name}
-                        </h5>
-                        <p className="font-cormorant italic text-sm text-[#c5a059]">
-                          {selectedMotif.vernacular}
-                        </p>
-                      </div>
-                      <span className="px-3 py-1 rounded-full text-[10px] font-cinzel tracking-widest bg-[#c5a059]/15 border border-[#c5a059]/30 text-[#ffd27d] uppercase">
-                        SACRED SPECIMEN
-                      </span>
-                    </div>
-
-                    {/* Right: Curatorial Breakdown of Symbolism, Context & Execution */}
-                    <div className="md:col-span-8 space-y-4">
-                      <div>
-                        <span className="text-[10px] font-cinzel text-[#a0824b] tracking-[0.2em] uppercase block">
-                          SYMBOLISM & CULTURAL MEANING
-                        </span>
-                        <p className="font-cormorant text-lg text-[#fff0d0] font-medium leading-relaxed">
-                          {selectedMotif.symbolism}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#c5a059]/20">
-                        <div>
-                          <span className="text-[10px] font-cinzel text-[#a0824b] tracking-[0.2em] uppercase block">
-                            TRADITIONAL CONTEXT
-                          </span>
-                          <p className="font-cormorant text-sm sm:text-base text-[#e8d8b8] leading-relaxed">
-                            {selectedMotif.context}
-                          </p>
-                        </div>
-                        <div>
-                          <span className="text-[10px] font-cinzel text-[#a0824b] tracking-[0.2em] uppercase block">
-                            TECHNIQUE & EXECUTION
-                          </span>
-                          <p className="font-cormorant text-sm sm:text-base text-[#e8d8b8] leading-relaxed">
-                            {selectedMotif.execution}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+              {/* Where it is traditionally used */}
+              <div className="space-y-2 pt-1">
+                <span className="text-xs font-cinzel text-[#c5a059] tracking-widest uppercase font-semibold block">
+                  WHERE IT IS TRADITIONALLY USED
+                </span>
+                <p className="font-cormorant text-xl text-[#f3e7ce] leading-relaxed">
+                  {currentMotif.context}
+                </p>
               </div>
-            )}
+
+              {/* How it is created */}
+              <div className="space-y-2 pt-1">
+                <span className="text-xs font-cinzel text-[#c5a059] tracking-widest uppercase font-semibold block">
+                  HOW IT IS CREATED · METHODOLOGY
+                </span>
+                <p className="font-cormorant text-xl text-[#e8d8b8] leading-relaxed">
+                  {currentMotif.execution}
+                </p>
+              </div>
+
+              {/* Traditional colours / materials */}
+              {(currentMotif.materials || tradition.medium) && (
+                <div className="space-y-2 pt-1 border-t border-[#c5a059]/20 pt-4">
+                  <span className="text-xs font-cinzel text-[#c5a059] tracking-widest uppercase font-semibold block">
+                    TRADITIONAL COLOURS & MATERIALS
+                  </span>
+                  <p className="font-cormorant text-xl text-[#ffd27d] leading-relaxed">
+                    {currentMotif.materials || tradition.medium}
+                  </p>
+                </div>
+              )}
+            </div>
+
           </div>
-        ))}
-      </div>
+        )}
+      </section>
 
-      {/* Bottom Pathway: Return to Archive or Proceed to Next Tradition */}
-      <div className="pt-12 border-t border-[#c5a059]/30 flex flex-col sm:flex-row items-center justify-between gap-6">
-        <button
-          onClick={onBackToArchive}
-          className="text-xs font-cinzel text-[#c5a059] hover:text-[#ffd27d] tracking-[0.22em] uppercase transition-colors flex items-center gap-2 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>RETURN TO FOLK ARTS ARCHIVE</span>
-        </button>
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
 
-        <button
-          onClick={onNavigateNextTradition}
-          className="group px-7 py-3 rounded-full border border-[#c5a059]/60 bg-[#1c0f08]/90 hover:bg-[#c5a059] text-[#ffd27d] hover:text-[#120a05] text-xs font-cinzel font-semibold tracking-[0.24em] transition-all cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.85)] flex items-center gap-2.5"
-        >
-          <span>EXPLORE NEXT TRADITION</span>
-          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </button>
-      </div>
+      {/* ====================================================================
+          JOURNEY STAGE 4: TECHNIQUE
+          Step-by-step master methodology & tactile craftsmanship
+          ==================================================================== */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-start">
+        <div className="lg:col-span-5 space-y-4">
+          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+            STAGE 04 · THE TECHNIQUE
+          </span>
+          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+            Methodology of Tactile Precision
+          </h2>
+          <p className="text-xs font-cinzel text-[#c5a059]/80 tracking-widest uppercase">
+            PASSED DOWN UNWRITTEN ACROSS GENERATIONS
+          </p>
+        </div>
+
+        <div className="lg:col-span-7 space-y-6">
+          <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+            {tradition.techniqueProcess}
+          </p>
+        </div>
+      </section>
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 5: TRADITION / CULTURAL MEANING
+          Where it was used, ceremonial context & community circles
+          ==================================================================== */}
+      <section className="space-y-12">
+        <div className="space-y-4 max-w-5xl">
+          <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+            STAGE 05 · TRADITION & CULTURAL MEANING
+          </span>
+          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+            The Living Matrix of Rural Ceremony
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 items-start">
+          <div className="lg:col-span-6 space-y-4">
+            <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+              SETTING & CEREMONIAL USE
+            </span>
+            <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+              {tradition.usageSetting}
+            </p>
+          </div>
+
+          <div className="lg:col-span-6 space-y-4">
+            <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+              COMMUNITY CIRCLES & TRANSMISSION
+            </span>
+            <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+              {tradition.communityContext}
+            </p>
+          </div>
+        </div>
+
+        {tradition.culturalMeaning && (
+          <div className="max-w-5xl pt-4">
+            <p className="font-cormorant text-xl sm:text-2xl text-[#ffd27d]/95 italic leading-relaxed sm:leading-loose border-l-2 border-[#c5a059] pl-6">
+              {tradition.culturalMeaning}
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 6: ARTISANS / PRACTITIONERS
+          Large documentary portrait, lineage quote, lived experience
+          ==================================================================== */}
+      {tradition.artisan && (
+        <section className="space-y-10">
+          <div className="space-y-3 max-w-4xl">
+            <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+              STAGE 06 · THE LIVING PRACTITIONERS
+            </span>
+            <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+              Hands That Guard the Ancestral Flame
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-14 items-center pt-4">
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-2xl overflow-hidden border border-[#c5a059]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] aspect-[4/3] bg-[#140b07] group">
+                <img
+                  src={tradition.secondaryImage || tradition.image}
+                  alt={tradition.artisan.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080402] via-transparent to-transparent opacity-80" />
+                <div className="absolute bottom-4 left-5 right-5 text-xs font-cinzel text-[#ffd27d] tracking-widest uppercase">
+                  {tradition.artisan.role} · {tradition.artisan.location}
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 space-y-5">
+              <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+                {tradition.artisan.location}
+              </span>
+              <h3 className="font-cinzel text-3xl sm:text-4xl text-[#fff0d0] font-normal leading-tight">
+                {tradition.artisan.name}
+              </h3>
+              <blockquote className="font-cormorant italic text-2xl sm:text-3xl text-[#ffd27d] border-l-2 border-[#c5a059] pl-5 my-3 leading-relaxed">
+                {tradition.artisan.quote}
+              </blockquote>
+              <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose">
+                {tradition.artisan.narrative}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Decorative Golden Divider */}
+      <FolkHeritageDivider />
+
+      {/* ====================================================================
+          JOURNEY STAGE 7: PRESENT DAY / PRESERVATION
+          Statutory GI, contemporary design revivals & living continuum
+          ==================================================================== */}
+      <section className="space-y-6 max-w-5xl">
+        <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+          STAGE 07 · PRESENT DAY & PRESERVATION
+        </span>
+        <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#ffd27d] font-normal leading-tight">
+          Contemporary Practice & Revitalization
+        </h2>
+        <p className="font-cormorant text-xl sm:text-2xl text-[#f3e7ce] leading-relaxed sm:leading-loose pt-2">
+          {tradition.todayPractice}
+        </p>
+      </section>
+
+      {/* ====================================================================
+          BOTTOM EDITORIAL TRANSITION & SEQUENTIAL NAVIGATOR
+          ==================================================================== */}
+      <section className="pt-12 border-t border-[#c5a059]/25 space-y-12">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          {prevTradition ? (
+            <button
+              onClick={() => onNavigateTradition && onNavigateTradition(prevTradition.id)}
+              className="group inline-flex items-center gap-3 text-xs font-cinzel text-[#c5a059] hover:text-[#ffd27d] tracking-[0.22em] uppercase transition-colors cursor-pointer font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              <span>← PREVIOUS: {prevTradition.title}</span>
+            </button>
+          ) : (
+            <button
+              onClick={onBackToArchive}
+              className="inline-flex items-center gap-2 text-xs font-cinzel text-[#c5a059] hover:text-[#ffd27d] tracking-[0.22em] uppercase transition-colors cursor-pointer font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>← RETURN TO ALL TRADITIONS</span>
+            </button>
+          )}
+
+          {nextTradition ? (
+            <button
+              onClick={() => onNavigateTradition && onNavigateTradition(nextTradition.id)}
+              className="group px-8 py-3.5 rounded-full border border-[#c5a059]/60 bg-[#1c0f08]/90 hover:bg-[#c5a059] text-[#ffd27d] hover:text-[#120a05] text-xs font-cinzel font-semibold tracking-[0.24em] uppercase transition-all cursor-pointer shadow-[0_4px_25px_rgba(0,0,0,0.85)] flex items-center gap-3"
+            >
+              <span>CONTINUE TO {nextTradition.title}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          ) : (
+            <button
+              onClick={onBackToArchive}
+              className="group px-8 py-3.5 rounded-full border border-[#c5a059]/60 bg-[#c5a059] hover:bg-[#ffd27d] text-[#120a05] text-xs font-cinzel font-bold tracking-[0.24em] uppercase transition-all cursor-pointer shadow-[0_4px_25px_rgba(201,164,90,0.5)] flex items-center gap-3"
+            >
+              <span>COMPLETED ALL CHAPTERS · RETURN</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Connected Adjacent Traditions */}
+        {relatedTraditionObjs.length > 0 && (
+          <div className="pt-8 border-t border-[#c5a059]/15 space-y-6">
+            <span className="text-xs font-cinzel text-[#c5a059] tracking-[0.28em] uppercase font-semibold block">
+              INTERCONNECTED FOLK DISCIPLINES
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {relatedTraditionObjs.map((rel) => (
+                <div
+                  key={rel.id}
+                  onClick={() => onNavigateTradition && onNavigateTradition(rel.id)}
+                  className="space-y-2 cursor-pointer group/rel"
+                >
+                  <span className="text-xs font-cinzel text-[#c5a059] block">
+                    CHAPTER {rel.num} · {rel.archetype}
+                  </span>
+                  <h4 className="font-cinzel text-xl text-[#ffd27d] group-hover/rel:text-[#fff0d0] transition-colors flex items-center gap-2">
+                    <span>{rel.title}</span>
+                    <span className="text-xs transition-transform group-hover/rel:translate-x-1">→</span>
+                  </h4>
+                  <p className="font-cormorant text-lg text-[#e8d8b8] line-clamp-2">
+                    {rel.shortDesc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
     </div>
   );
 }

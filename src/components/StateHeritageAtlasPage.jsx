@@ -6,6 +6,8 @@ import SthaneshwarTempleExperience from './SthaneshwarTempleExperience';
 import TempleEntryTransition from './TempleEntryTransition';
 import FolkArtsExperience from './FolkArtsExperience';
 import FolkArtsEntryTransition from './FolkArtsEntryTransition';
+import LiteratureEntryTransition from './LiteratureEntryTransition';
+import HaryanaLiteratureExperience from './HaryanaLiteratureExperience';
 import AudioControl from './AudioControl';
 import audioManager from '../services/audioManager';
 
@@ -312,10 +314,11 @@ export default function StateHeritageAtlasPage({
   onReturnToMap, 
   onReliveJourney 
 }) {
-  // Stage states: 'gate' | 'temples-archive' | 'story'
+  // Stage states: 'gate' | 'temples-archive' | 'story' | 'folk-arts' | 'literature'
   const [stage, setStage] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
+      if (path.includes('/literature')) return 'literature';
       if (path.includes('/folk-arts')) return 'folk-arts';
       if (path.includes('/temples/')) return 'story';
       if (path.includes('/temples')) return 'temples-archive';
@@ -345,6 +348,7 @@ export default function StateHeritageAtlasPage({
   const [modalImage, setModalImage] = useState(null);
   const [enteringTempleData, setEnteringTempleData] = useState(null);
   const [isEnteringFolkArts, setIsEnteringFolkArts] = useState(false);
+  const [isEnteringLiterature, setIsEnteringLiterature] = useState(false);
 
   // Dynamic Walkthrough States: Scroll depth & Architectural Guide Hotspots
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -371,7 +375,9 @@ export default function StateHeritageAtlasPage({
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      if (path.includes('/folk-arts')) {
+      if (path.includes('/literature')) {
+        setStage('literature');
+      } else if (path.includes('/folk-arts')) {
         setStage('folk-arts');
       } else if (path.includes('/temples/')) {
         const id = path.split('/temples/')[1];
@@ -463,11 +469,25 @@ export default function StateHeritageAtlasPage({
     setIsEnteringFolkArts(false);
   };
 
+  const handleOpenLiterature = () => {
+    if (isEnteringLiterature) return;
+    setIsEnteringLiterature(true);
+  };
+
+  const handleLiteratureTransitionComplete = () => {
+    setStage('literature');
+    window.history.pushState(null, '', '/haryana/literature');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    setIsEnteringLiterature(false);
+  };
+
   const handleCategoryItemClick = (categoryId, categoryLabel) => {
     if (categoryId === 'temples') {
       handleOpenTemplesArchive();
     } else if (categoryId === 'folkArts') {
       handleOpenFolkArts();
+    } else if (categoryId === 'literature') {
+      handleOpenLiterature();
     } else {
       if (window.playTempleChime) window.playTempleChime();
       setToastMessage(`${categoryLabel} — Curatorial preservation in progress. This archive will open soon.`);
@@ -977,9 +997,9 @@ export default function StateHeritageAtlasPage({
 
       {/* ====================================================================
           TOP NAVIGATION CONTROLS FOR GATE & TEMPLES ARCHIVE
-          (When in story mode or folk arts mode, each experience renders its own dedicated navigation)
+          (When in story mode, folk arts mode, or literature mode, each experience renders its own dedicated navigation)
           ==================================================================== */}
-      {stage !== 'story' && stage !== 'folk-arts' && (
+      {stage !== 'story' && stage !== 'folk-arts' && stage !== 'literature' && (
         <header className="fixed top-5 left-5 right-5 sm:left-8 sm:right-8 z-50 flex items-center justify-between pointer-events-none">
           <div className="flex items-center gap-3 pointer-events-auto">
             {stage === 'temples-archive' ? (
@@ -1588,6 +1608,32 @@ export default function StateHeritageAtlasPage({
       {stage === 'folk-arts' && (
         <FolkArtsExperience
           onBackToGate={handleBackToGate}
+        />
+      )}
+
+      {/* Cinematic Handcrafted Manuscript Entry Transition into Literature */}
+      <LiteratureEntryTransition
+        isActive={isEnteringLiterature}
+        onComplete={handleLiteratureTransitionComplete}
+      />
+
+      {/* ====================================================================
+          STAGE 6: IMMERSIVE LITERATURE OF HARYANA ARCHIVE
+          (The Living Word • The Literary River • Oral Recitation • Voices • Epics • The Archive)
+          ==================================================================== */}
+      {stage === 'literature' && (
+        <HaryanaLiteratureExperience
+          onBackToGate={handleBackToGate}
+          onNavigateToFolkArts={() => {
+            setStage('folk-arts');
+            window.history.pushState(null, '', '/haryana/folk-arts/journey');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
+          onNavigateToArtisans={() => {
+            setStage('folk-arts');
+            window.history.pushState(null, '', '/haryana/folk-arts/artisans');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
         />
       )}
 

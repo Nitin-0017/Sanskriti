@@ -18,7 +18,7 @@ export default function App() {
   const [showEntrance, setShowEntrance] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
-      if (path.includes('/haryana') || path.includes('/folk-arts') || path === '/explore' || path === '/heritage' || path === '/about' || path === '/auth' || path === '/map') {
+      if (path.includes('/haryana') || path.includes('/folk-arts') || path.includes('/literature') || path === '/explore' || path === '/heritage' || path === '/about' || path === '/auth' || path === '/map') {
         return false;
       }
     }
@@ -40,7 +40,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
-      if (path.includes('/haryana') || path.includes('/folk-arts')) return 'state-archive';
+      if (path.includes('/haryana') || path.includes('/folk-arts') || path.includes('/literature')) return 'state-archive';
       if (path === '/explore') return 'explore';
       if (path === '/heritage') return 'heritage';
       if (path === '/about') return 'about';
