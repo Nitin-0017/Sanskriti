@@ -141,7 +141,7 @@ export default function App() {
           isMuted={isMuted}
           setIsMuted={setIsMuted}
           onNavigate={handleNavigate}
-          isVisible={!showEntrance || currentView !== 'landing'}
+          isVisible={currentView !== 'landing' ? true : (!showEntrance && isNavbarVisible)}
         />
       )}
 
@@ -180,22 +180,18 @@ export default function App() {
 
       {/* 4. VIEW: LANDING PAGE */}
       {currentView === 'landing' && (
-        <motion.div
+        <div
           key="landing-page"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.7 }}
           className="relative w-full h-screen overflow-hidden"
         >
-          <OrnamentalFrame />
+          <OrnamentalFrame isVisible={!showEntrance && isNavbarVisible} />
           <CinematicJourneyHero
             isActive={!showEntrance}
             onBeginJourneyNext={handleBeginJourney}
             isNavbarVisible={isNavbarVisible}
             setIsNavbarVisible={setIsNavbarVisible}
           />
-        </motion.div>
+        </div>
       )}
 
       {/* 5. VIEW: EXPLORE INDIA PAGE */}

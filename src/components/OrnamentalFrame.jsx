@@ -3,9 +3,9 @@ import React from 'react';
 /**
  * Traditional Indian Manuscript Borders, Corner Filigrees & Vintage Cartography Details
  */
-export default function OrnamentalFrame() {
+export default function OrnamentalFrame({ isVisible = true }) {
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 overflow-hidden">
+    <div className={`pointer-events-none fixed inset-0 z-30 overflow-hidden transition-opacity duration-1000 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       {/* Outer Manuscript Border Frame */}
       <div className="absolute inset-3 sm:inset-5 border border-[#c5a059]/30 rounded-xs pointer-events-none">
         <div className="absolute inset-1 border border-[#c5a059]/15 pointer-events-none" />

@@ -46,8 +46,8 @@ export default function EntranceSequence({ onComplete }) {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.08 }}
-      transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0906] overflow-hidden select-none cursor-pointer"
       onClick={handleSkip}
     >

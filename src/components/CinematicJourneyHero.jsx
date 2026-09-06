@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import DiyaFlame from './DiyaFlame';
 import LivingAtmosphereCanvas from './LivingAtmosphereCanvas';
 import BrandReveal from './BrandReveal';
 
 /**
- * Cinematic Journey Hero (3D World Travel & Persistent Atmosphere)
+ * Cinematic Journey Hero (Heritage Archive Entrance)
  *
  * Sequence:
- * 0.0 - 0.35: Ground-level corridor with close carved pillars, fallen leaves, and ground diyas.
- * 0.35 - 0.85: Camera travels forward, corridor opens up, revealing the vast temple city & elephant.
- * 0.85 - 1.0: Camera smoothly decelerates and comes to a peaceful stop.
- * 1.0 (Arrival): Calm breathing space, then SANSKRITI title & navbar are revealed!
- *
- * All atmospheric effects, light rays, and particles persist and respond continuously to forward travel velocity.
+ * 1. Background image is preloaded and pre-positioned at its resting coordinates.
+ * 2. Background transitions in smoothly with a subtle opacity fade.
+ * 3. Atmospheric dark overlay, vignette, and ambient warmth fade in independently.
+ * 4. Navbar/UI appears smoothly with subtle fade + upward movement after background stabilizes.
+ * 5. Hero content appears smoothly without causing background re-render or jump.
+ * 6. Resting state operates with gentle, GPU-accelerated 2.5D mouse parallax.
  */
 export default function CinematicJourneyHero({
   isActive = true,
@@ -21,17 +20,61 @@ export default function CinematicJourneyHero({
   isNavbarVisible,
   setIsNavbarVisible,
 }) {
-  // Journey progress from 0.0 (start of road) to 1.0 (arrival at hero composition)
-  const [progress, setProgress] = useState(0);
-  const [hasArrived, setHasArrived] = useState(false);
+  // Staged entrance states
+  const [isBgVisible, setIsBgVisible] = useState(false);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [isHeroContentVisible, setIsHeroContentVisible] = useState(false);
+  const [isSettled, setIsSettled] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  const progressRef = useRef(0);
-  const animFrameRef = useRef(null);
-  const autoPlaySpeedRef = useRef(0.0016); // ~10.5 seconds for complete journey
-
-  // Track mouse for refined subtle 2.5D spatial parallax
+  // 1. Preload primary background image so it's already in browser cache before animation begins
   useEffect(() => {
+    const img = new Image();
+    img.src = '/assets/heritage_hero_bg.jpg';
+  }, []);
+
+  // 2. Coordinated, non-competing cinematic entrance sequence (runs once per entry)
+  useEffect(() => {
+    if (!isActive) return;
+
+    // Step 1: Background fades in smoothly (already pre-positioned at scale 1.02)
+    const t1 = setTimeout(() => {
+      setIsBgVisible(true);
+    }, 60);
+
+    // Step 2: Dark overlay, vignette & sanctum warmth fade in smoothly and independently
+    const t2 = setTimeout(() => {
+      setIsOverlayVisible(true);
+    }, 420);
+
+    // Step 3: Navbar appears smoothly with subtle fade + upward movement after background stabilizes
+    const t3 = setTimeout(() => {
+      if (setIsNavbarVisible) setIsNavbarVisible(true);
+    }, 850);
+
+    // Step 4: Hero content (BrandReveal) appears smoothly without background re-render
+    const t4 = setTimeout(() => {
+      setIsHeroContentVisible(true);
+    }, 1150);
+
+    // Step 5: Scene settles permanently into resting state; subtle mouse parallax gently activates
+    const t5 = setTimeout(() => {
+      setIsSettled(true);
+    }, 1900);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
+  }, [isActive, setIsNavbarVisible]);
+
+  // 3. Smooth, throttled mouse movement for resting state parallax (active only after settling)
+  useEffect(() => {
+    if (!isSettled) return;
+
     const handleMouseMove = (e) => {
       const { innerWidth, innerHeight } = window;
       const x = (e.clientX / innerWidth - 0.5) * 2;
@@ -41,231 +84,89 @@ export default function CinematicJourneyHero({
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isSettled]);
 
-  // Automatic smooth cinematic journey loop (runs seamlessly when active)
-  useEffect(() => {
-    if (!isActive) return;
-
-    let lastTime = performance.now();
-
-    const loop = (currentTime) => {
-      const delta = (currentTime - lastTime) / 1000;
-      lastTime = currentTime;
-
-      if (progressRef.current < 1.0) {
-        // Natural easing: gentle start, steady cruise, gradual deceleration into destination
-        let speedMultiplier = 1.0;
-        const p = progressRef.current;
-        if (p < 0.2) speedMultiplier = 0.7 + p * 2.0; // gentle ramp up
-        else if (p > 0.75) speedMultiplier = Math.max(0.2, (1.0 - p) * 3.5); // smooth braking
-
-        const nextP = Math.min(1.0, progressRef.current + autoPlaySpeedRef.current * speedMultiplier * (delta * 60));
-        progressRef.current = nextP;
-        setProgress(nextP);
-
-        if (nextP >= 1.0) {
-          setHasArrived(true);
-          setIsNavbarVisible(true);
-        }
-      }
-
-      animFrameRef.current = requestAnimationFrame(loop);
-    };
-
-    animFrameRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, [isActive, setIsNavbarVisible]);
-
-  // Handle scroll & trackpad scrubbing through the journey
-  useEffect(() => {
-    if (!isActive) return;
-
-    const handleWheel = (e) => {
-      const delta = e.deltaY * 0.00085;
-      const nextP = Math.min(Math.max(progressRef.current + delta, 0), 1.0);
-      progressRef.current = nextP;
-      setProgress(nextP);
-
-      if (nextP >= 0.96) {
-        setHasArrived(true);
-        setIsNavbarVisible(true);
-      } else {
-        setHasArrived(false);
-        setIsNavbarVisible(false);
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: true });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [isActive, setIsNavbarVisible]);
-
-  // Parallax offsets (Restrained & refined within a few pixels)
-  const p = progress;
-  const mx = mousePos.x * (hasArrived ? 0.7 : 0.3);
-  const my = mousePos.y * (hasArrived ? 0.7 : 0.3);
-
-  // Depth transforms
-  // 1. Initial close-up corridor (fades and expands outwards past camera)
-  const corridorScale = 1.0 + p * 1.6;
-  const corridorOpacity = Math.max(0, 1.0 - p * 1.9);
-  const corridorTranslateY = p * 150;
-
-  // 2. Pillars frame overlay (moves wide and sweeps past camera)
-  const pillarsScale = 1.0 + p * 2.2;
-  const pillarsOpacity = Math.max(0, 1.0 - p * 2.6);
-
-  // 3. Destination Heritage World (scales from distant into crisp final composition)
-  const destScale = 0.84 + p * 0.21; // starts at 0.84 scale and expands to 1.05
-  const destOpacity = Math.min(1.0, 0.4 + p * 0.9);
-  const destTranslateY = (1.0 - p) * 40;
+  const mx = isSettled ? mousePos.x * 0.5 : 0;
+  const my = isSettled ? mousePos.y * 0.5 : 0;
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-[#0a0704] select-none">
 
       {/* ========================================================
-          LAYER 1: DESTINATION HERITAGE WORLD (Arriving Landscape)
+          LAYER 1: DESTINATION HERITAGE WORLD (Pre-positioned Background)
           ======================================================== */}
       <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url('/assets/heritage_hero_bg.jpg')`,
-          opacity: destOpacity,
-          transform: `translate3d(${mx * 5}px, ${my * 3 + destTranslateY}px, 0) scale(${destScale})`,
-          filter: `brightness(${0.86 + p * 0.18}) contrast(${0.96 + p * 0.08})`,
+          opacity: isBgVisible ? 1 : 0,
+          transform: isSettled
+            ? `translate3d(${mx * 5}px, ${my * 3}px, 0) scale(1.02)`
+            : 'translate3d(0, 0, 0) scale(1.02)',
+          transition: isSettled
+            ? 'transform 0.4s ease-out, opacity 1.3s cubic-bezier(0.22, 1, 0.36, 1)'
+            : 'opacity 1.3s cubic-bezier(0.22, 1, 0.36, 1)',
+          willChange: 'opacity, transform',
+          filter: 'brightness(1.02) contrast(1.02)',
         }}
       />
 
       {/* ========================================================
-          LAYER 2: ATMOSPHERIC HORIZON MIST & WARM HAZE (Continuous)
+          LAYER 2: ATMOSPHERIC HORIZON MIST & WARM HAZE (Independent Fade)
           ======================================================== */}
       <div
-        className="absolute top-[25%] left-0 right-0 h-48 pointer-events-none opacity-30 mix-blend-screen bg-gradient-to-t from-transparent via-[#ffd27d]/25 to-transparent transition-transform duration-300"
+        className="absolute top-[25%] left-0 right-0 h-48 pointer-events-none mix-blend-screen bg-gradient-to-t from-transparent via-[#ffd27d]/25 to-transparent transition-opacity duration-1000 ease-out"
         style={{
+          opacity: isOverlayVisible ? 0.35 : 0,
           transform: `translate3d(${mx * 3}px, ${my * 2}px, 0)`,
           animation: 'floatGentle 8s ease-in-out infinite',
         }}
       />
 
       {/* ========================================================
-          LAYER 3: CLOSE-UP STARTING CORRIDOR & GROUND ROAD
+          LAYER 3: SOARING BIRDS (Multi-layer sky movements)
           ======================================================== */}
-      {corridorOpacity > 0.01 && (
-        <div
-          className="absolute inset-0 bg-cover bg-center pointer-events-none transition-transform duration-75 ease-out"
-          style={{
-            backgroundImage: `url('/assets/pathway_start_closeup.jpg')`,
-            opacity: corridorOpacity,
-            transform: `translate3d(${mx * 12}px, ${my * 8 + corridorTranslateY}px, 0) scale(${corridorScale})`,
-            filter: `blur(${p * 4}px)`,
-          }}
-        />
-      )}
-
-      {/* ========================================================
-          LAYER 4: CARVED STONE PILLARS FRAMING (Sweeps past camera)
-          ======================================================== */}
-      {pillarsOpacity > 0.01 && (
-        <div
-          className="absolute inset-0 bg-cover bg-center pointer-events-none mix-blend-screen"
-          style={{
-            backgroundImage: `url('/assets/pillars_frame.jpg')`,
-            opacity: pillarsOpacity * 0.85,
-            transform: `scale(${pillarsScale}) translate3d(${mx * 18}px, ${my * 10}px, 0)`,
-            filter: `blur(${p * 8}px)`,
-          }}
-        />
-      )}
-
-      {/* ========================================================
-          LAYER 5: SOARING BIRDS (Multi-layer sky movements)
-          ======================================================== */}
-      {/* Distant Slow Flock */}
-      <div className="absolute top-[14%] left-0 w-full pointer-events-none opacity-50">
-        <div className="animate-bird-flight flex items-center gap-9">
-          <svg className="w-4 h-2.5 text-[#24180f]" viewBox="0 0 20 10" fill="currentColor">
-            <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
-          </svg>
-          <svg className="w-3 h-2 text-[#24180f] -mt-2" viewBox="0 0 20 10" fill="currentColor">
-            <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
-          </svg>
-          <svg className="w-3.5 h-2 text-[#24180f] mt-2" viewBox="0 0 20 10" fill="currentColor">
-            <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
-          </svg>
+      <div 
+        className="transition-opacity duration-1000 ease-out pointer-events-none"
+        style={{ opacity: isOverlayVisible ? 0.6 : 0 }}
+      >
+        {/* Distant Slow Flock */}
+        <div className="absolute top-[14%] left-0 w-full pointer-events-none opacity-50">
+          <div className="animate-bird-flight flex items-center gap-9">
+            <svg className="w-4 h-2.5 text-[#24180f]" viewBox="0 0 20 10" fill="currentColor">
+              <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
+            </svg>
+            <svg className="w-3 h-2 text-[#24180f] -mt-2" viewBox="0 0 20 10" fill="currentColor">
+              <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
+            </svg>
+            <svg className="w-3.5 h-2 text-[#24180f] mt-2" viewBox="0 0 20 10" fill="currentColor">
+              <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
+            </svg>
+          </div>
         </div>
-      </div>
 
-      {/* Mid-Sky Flock */}
-      <div className="absolute top-[21%] left-0 w-full pointer-events-none opacity-60">
-        <div
-          className="animate-bird-flight flex items-center gap-6"
-          style={{ animationDuration: '38s', animationDelay: '-15s' }}
-        >
-          <svg className="w-4.5 h-3 text-[#1f140c]" viewBox="0 0 20 10" fill="currentColor">
-            <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
-          </svg>
-          <svg className="w-3.5 h-2.5 text-[#1f140c] mt-2" viewBox="0 0 20 10" fill="currentColor">
-            <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
-          </svg>
+        {/* Mid-Sky Flock */}
+        <div className="absolute top-[21%] left-0 w-full pointer-events-none opacity-60">
+          <div
+            className="animate-bird-flight flex items-center gap-6"
+            style={{ animationDuration: '38s', animationDelay: '-15s' }}
+          >
+            <svg className="w-4.5 h-3 text-[#1f140c]" viewBox="0 0 20 10" fill="currentColor">
+              <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
+            </svg>
+            <svg className="w-3.5 h-2.5 text-[#1f140c] mt-2" viewBox="0 0 20 10" fill="currentColor">
+              <path d="M0,5 Q5,0 10,5 Q15,0 20,5 Q15,2 10,7 Q5,2 0,5 Z" />
+            </svg>
+          </div>
         </div>
       </div>
 
       {/* ========================================================
-          LAYER 6: PASS-BY STARTING CORRIDOR DIYAS (0.0 -> 0.45)
-          ======================================================== */}
-      {corridorOpacity > 0.05 && (
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-          style={{ opacity: corridorOpacity }}
-        >
-          {/* Close Ground Left Diya - sweeps past bottom left */}
-          <div
-            className="absolute bottom-[10%] left-[12%]"
-            style={{
-              transform: `translate3d(${-p * 180 + mx * 15}px, ${p * 120 + my * 8}px, 0) scale(${1.3 + p * 1.5})`
-            }}
-          >
-            <DiyaFlame scale={1.4} delay={0.1} duration={1.6} />
-          </div>
-
-          {/* Close Ground Right Diya - sweeps past bottom right */}
-          <div
-            className="absolute bottom-[10%] right-[12%]"
-            style={{
-              transform: `translate3d(${p * 180 + mx * 15}px, ${p * 120 + my * 8}px, 0) scale(${1.3 + p * 1.5})`
-            }}
-          >
-            <DiyaFlame scale={1.4} delay={0.7} duration={2.0} />
-          </div>
-
-          {/* Mid-Corridor Left Step Diya */}
-          <div
-            className="absolute bottom-[28%] left-[28%]"
-            style={{
-              transform: `translate3d(${-p * 120 + mx * 10}px, ${p * 90 + my * 6}px, 0) scale(${0.9 + p * 1.2})`
-            }}
-          >
-            <DiyaFlame scale={0.9} delay={0.4} duration={1.8} />
-          </div>
-
-          {/* Mid-Corridor Right Step Diya */}
-          <div
-            className="absolute bottom-[28%] right-[28%]"
-            style={{
-              transform: `translate3d(${p * 120 + mx * 10}px, ${p * 90 + my * 6}px, 0) scale(${0.9 + p * 1.2})`
-            }}
-          >
-            <DiyaFlame scale={0.9} delay={1.1} duration={1.7} />
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================
-          LAYER 7: SANCTUM DESTINATION DIYAS (0.35 -> 1.0)
+          LAYER 4: SANCTUM DESTINATION DIYAS (Lamps in Temple Sanctum)
           ======================================================== */}
       <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-        style={{ opacity: Math.min(1.0, Math.max(0.1, p * 1.2)) }}
+        className="absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-out"
+        style={{ opacity: isOverlayVisible ? 1 : 0 }}
       >
         {/* Foreground Left Diya on Stone Post */}
         <div
@@ -313,49 +214,53 @@ export default function CinematicJourneyHero({
       </div>
 
       {/* ========================================================
-          LAYER 8: LIVING ATMOSPHERE CANVAS ENGINE (3D Travel Physics)
-          Persists continuously throughout entire travel journey!
+          LAYER 5: LIVING ATMOSPHERE CANVAS ENGINE (Particles & Rays)
           ======================================================== */}
-      <LivingAtmosphereCanvas
-        mousePos={mousePos}
-        progress={progress}
-        isArrival={hasArrived}
-      />
+      <div
+        className="transition-opacity duration-1000 ease-out pointer-events-none"
+        style={{ opacity: isOverlayVisible ? 1 : 0 }}
+      >
+        <LivingAtmosphereCanvas
+          mousePos={mousePos}
+          progress={1.0}
+          isArrival={true}
+        />
+      </div>
 
       {/* ========================================================
-          LAYER 9: AMBIENT MORNING LIGHT BREATHING
+          LAYER 6: AMBIENT MORNING LIGHT BREATHING
           ======================================================== */}
       <div
         className="absolute inset-0 pointer-events-none mix-blend-screen bg-gradient-radial from-[#ffe39f]/25 via-[#d4af37]/8 to-transparent transition-opacity duration-1000"
         style={{
-          opacity: 0.35 + p * 0.35,
+          opacity: isOverlayVisible ? 0.55 : 0,
           animation: 'pulseHalo 10s ease-in-out infinite alternate',
         }}
       />
 
       {/* ========================================================
-          LAYER 10: THE ARRIVAL MOMENT — SANSKRITI TITLE REVEAL
-          ======================================================== */}
-      <AnimatePresence>
-        {hasArrived && (
-          <motion.div
-            initial={{ opacity: 0, y: 35, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 flex items-center justify-center pt-8 sm:pt-4"
-          >
-            <BrandReveal onBeginJourney={onBeginJourneyNext} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ========================================================
-          LAYER 11: VINTAGE PARCHMENT TEXTURE OVERLAY
+          LAYER 7: HERO CONTENT (BrandReveal — Smooth Staged Entrance)
           ======================================================== */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-cover bg-center"
-        style={{ backgroundImage: `url('/assets/parchment_texture.jpg')` }}
+        className="absolute inset-0 flex items-center justify-center pt-8 sm:pt-4 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          opacity: isHeroContentVisible ? 1 : 0,
+          transform: isHeroContentVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 16px, 0)',
+          pointerEvents: isHeroContentVisible ? 'auto' : 'none',
+        }}
+      >
+        <BrandReveal onBeginJourney={onBeginJourneyNext} />
+      </div>
+
+      {/* ========================================================
+          LAYER 8: VINTAGE PARCHMENT TEXTURE OVERLAY
+          ======================================================== */}
+      <div
+        className="absolute inset-0 pointer-events-none mix-blend-overlay bg-cover bg-center transition-opacity duration-1000"
+        style={{
+          backgroundImage: `url('/assets/parchment_texture.jpg')`,
+          opacity: isOverlayVisible ? 0.2 : 0,
+        }}
       />
     </div>
   );

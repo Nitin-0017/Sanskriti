@@ -30,8 +30,13 @@ export default function HeritageNavbar({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-3.5 sm:py-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-3.5 sm:py-4 transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isVisible
+          ? 'translate-y-0 opacity-100 pointer-events-auto'
+          : currentView === 'landing'
+            ? 'translate-y-3 opacity-0 pointer-events-none'
+            : '-translate-y-full opacity-0 pointer-events-none'
+      }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-[#c5a059]/35 bg-[#160f0a]/80 backdrop-blur-md shadow-[0_4px_25px_rgba(0,0,0,0.65)]">
 
