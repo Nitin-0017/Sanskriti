@@ -10,6 +10,7 @@ import LiteratureEntryTransition from './LiteratureEntryTransition';
 import HaryanaLiteratureExperience from './HaryanaLiteratureExperience';
 import HaryanaScripturesExperience from './HaryanaScripturesExperience';
 import ScripturesEntryTransition from './ScripturesEntryTransition';
+import ScripturesKeyPersonsExperience from './ScripturesKeyPersonsExperience';
 import AudioControl from './AudioControl';
 import audioManager from '../services/audioManager';
 
@@ -316,10 +317,11 @@ export default function StateHeritageAtlasPage({
   onReturnToMap, 
   onReliveJourney 
 }) {
-  // Stage states: 'gate' | 'temples-archive' | 'story' | 'folk-arts' | 'literature' | 'scriptures'
+  // Stage states: 'gate' | 'temples-archive' | 'story' | 'folk-arts' | 'literature' | 'scriptures' | 'key-persons'
   const [stage, setStage] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
+      if (path.includes('/key-persons') || path.includes('/keepers')) return 'key-persons';
       if (path.includes('/scriptures')) return 'scriptures';
       if (path.includes('/literature')) return 'literature';
       if (path.includes('/folk-arts')) return 'folk-arts';
@@ -379,7 +381,9 @@ export default function StateHeritageAtlasPage({
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      if (path.includes('/scriptures')) {
+      if (path.includes('/key-persons') || path.includes('/keepers')) {
+        setStage('key-persons');
+      } else if (path.includes('/scriptures')) {
         setStage('scriptures');
       } else if (path.includes('/literature')) {
         setStage('literature');
@@ -501,6 +505,14 @@ export default function StateHeritageAtlasPage({
     setIsEnteringScriptures(false);
   };
 
+  const handleOpenKeyPersons = () => {
+    audioManager.setGeneralWebsite();
+    if (window.playTempleChime) window.playTempleChime();
+    setStage('key-persons');
+    window.history.pushState(null, '', '/haryana/key-persons');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   const handleCategoryItemClick = (categoryId, categoryLabel) => {
     if (categoryId === 'temples') {
       handleOpenTemplesArchive();
@@ -510,6 +522,8 @@ export default function StateHeritageAtlasPage({
       handleOpenLiterature();
     } else if (categoryId === 'scriptures') {
       handleOpenScriptures();
+    } else if (categoryId === 'keyPersons') {
+      handleOpenKeyPersons();
     } else {
       if (window.playTempleChime) window.playTempleChime();
       setToastMessage(`${categoryLabel} — Curatorial preservation in progress. This archive will open soon.`);
@@ -1030,7 +1044,7 @@ export default function StateHeritageAtlasPage({
           TOP NAVIGATION CONTROLS FOR GATE & TEMPLES ARCHIVE
           (When in story mode, folk arts mode, literature mode, or scriptures mode, each experience renders its own dedicated navigation)
           ==================================================================== */}
-      {stage !== 'story' && stage !== 'folk-arts' && stage !== 'literature' && stage !== 'scriptures' && (
+      {stage !== 'story' && stage !== 'folk-arts' && stage !== 'literature' && stage !== 'scriptures' && stage !== 'key-persons' && (
         <header className="fixed top-5 left-5 right-5 sm:left-8 sm:right-8 z-50 flex items-center justify-between pointer-events-none">
           <div className="flex items-center gap-3 pointer-events-auto">
             {stage === 'temples-archive' ? (
@@ -1678,6 +1692,18 @@ export default function StateHeritageAtlasPage({
           onBackToGate={handleBackToGate}
           onNavigateToLiterature={handleOpenLiterature}
           onNavigateToTemples={handleOpenTemplesArchive}
+          onReturnToMap={onReturnToMap}
+          onReliveJourney={onReliveJourney}
+        />
+      )}
+
+      {/* ====================================================================
+          STAGE 8: THE KEEPERS OF KNOWLEDGE (KEY PERSONS EXHIBITION)
+          (The Sacred Word • Lineages • Sages • Scholars • Commentators)
+          ==================================================================== */}
+      {stage === 'key-persons' && (
+        <ScripturesKeyPersonsExperience
+          onReturnToScriptures={handleBackToGate}
           onReturnToMap={onReturnToMap}
           onReliveJourney={onReliveJourney}
         />

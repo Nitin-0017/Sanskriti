@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { SACRED_MANUSCRIPTS_COLLECTION, SCRIPTURE_WORDS_GLOSSARY } from '../data/manuscriptBookData';
 import AudioControl from './AudioControl';
+import ScripturesKeyPersonsExperience from './ScripturesKeyPersonsExperience';
 
 // Web Audio API Synthesizer for tactile feedback (wax snap & paper rustle)
 function playTactileSound(type) {
@@ -613,8 +614,14 @@ export default function HaryanaScripturesExperience({
   onReturnToMap,
   onReliveJourney
 }) {
-  // Navigation & State
-  const [viewMode, setViewMode] = useState('collection'); // 'collection' | 'viewer'
+  // Navigation & State: 'collection' | 'viewer' | 'keepers'
+  const [viewMode, setViewMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path.includes('/keepers') || path.includes('/people')) return 'keepers';
+    }
+    return 'collection';
+  });
   const [transitionPhase, setTransitionPhase] = useState('idle');
   // 'idle' | 'fading-archive' | 'central-glow' | 'glow-expanding' | 'revealing-manuscript' | 'fading-viewer' | 'contracting-glow'
   const [selectedManuscriptIndex, setSelectedManuscriptIndex] = useState(0); // Default Bhagavad Gita
@@ -650,6 +657,21 @@ export default function HaryanaScripturesExperience({
       shelfContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        const path = window.location.pathname;
+        if (path.includes('/keepers') || path.includes('/people')) {
+          setViewMode('keepers');
+        } else if (path.includes('/scriptures')) {
+          setViewMode('collection');
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const currentManuscript = SACRED_MANUSCRIPTS_COLLECTION[selectedManuscriptIndex] || SACRED_MANUSCRIPTS_COLLECTION[0];
   const currentFolio = currentManuscript.folios[activeFolioIndex] || currentManuscript.folios[0];
@@ -1409,15 +1431,30 @@ export default function HaryanaScripturesExperience({
             </p>
           </div>
 
-          <button 
-            onClick={() => {
-              readingTableRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="flex items-center gap-2 text-xs font-cinzel text-[#ffd27d] hover:text-white tracking-[0.2em] uppercase transition-colors group cursor-pointer"
-          >
-            <span>VIEW ARCHIVAL MAP</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </button>
+          <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-end">
+            <button 
+              onClick={() => {
+                setViewMode('keepers');
+                window.history.pushState(null, '', '/haryana/scriptures/keepers');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
+              className="flex items-center gap-1.5 text-xs font-cinzel text-[#ffd27d] hover:text-white tracking-[0.2em] uppercase transition-colors group cursor-pointer"
+              title="Explore The Keepers of Knowledge"
+            >
+              <span>KEY PERSONS</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+            <span className="text-[#c5a059]/40 hidden sm:inline">|</span>
+            <button 
+              onClick={() => {
+                readingTableRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="flex items-center gap-2 text-xs font-cinzel text-[#ffd27d] hover:text-white tracking-[0.2em] uppercase transition-colors group cursor-pointer"
+            >
+              <span>VIEW ARCHIVAL MAP</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </div>
         </div>
 
         {/* The Archive Bookshelf Stage */}
@@ -1611,7 +1648,17 @@ export default function HaryanaScripturesExperience({
 
           {/* Right Archival Index Column */}
           <div className="relative z-10 w-full lg:w-32 flex lg:flex-col justify-between items-center lg:items-start border-t lg:border-t-0 lg:border-l border-[#8a5d28]/40 pt-4 lg:pt-0 lg:pl-6 text-[10px] sm:text-[11px] font-cinzel text-[#5e3818] tracking-[0.22em] uppercase space-y-0 lg:space-y-3">
-            <span className="hover:text-[#1e0e04] transition-colors cursor-pointer">PEOPLE</span>
+            <button
+              onClick={() => {
+                setViewMode('keepers');
+                window.history.pushState(null, '', '/haryana/scriptures/keepers');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
+              className="hover:text-[#1e0e04] transition-colors cursor-pointer text-left font-cinzel text-[10px] sm:text-[11px] text-[#5e3818] hover:font-bold tracking-[0.22em] uppercase"
+              title="Explore The Keepers of Knowledge"
+            >
+              PEOPLE
+            </button>
             <span className="hover:text-[#1e0e04] transition-colors cursor-pointer">PLACES</span>
             <span className="hover:text-[#1e0e04] transition-colors cursor-pointer">IDEAS</span>
             <span className="hover:text-[#1e0e04] transition-colors cursor-pointer">PRESERVATION</span>
@@ -2293,6 +2340,21 @@ export default function HaryanaScripturesExperience({
         </footer>
       )}
         </div>
+      )}
+
+      {/* ====================================================================
+          MODE 3: THE KEEPERS OF KNOWLEDGE (KEY PERSONS EXHIBITION)
+          ==================================================================== */}
+      {viewMode === 'keepers' && (
+        <ScripturesKeyPersonsExperience
+          onReturnToScriptures={() => {
+            setViewMode('collection');
+            window.history.pushState(null, '', '/haryana/scriptures');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
+          onReturnToMap={onReturnToMap}
+          onReliveJourney={onReliveJourney}
+        />
       )}
 
       {/* ====================================================================
