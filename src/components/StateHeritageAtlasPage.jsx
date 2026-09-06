@@ -9,6 +9,7 @@ import FolkArtsEntryTransition from './FolkArtsEntryTransition';
 import LiteratureEntryTransition from './LiteratureEntryTransition';
 import HaryanaLiteratureExperience from './HaryanaLiteratureExperience';
 import HaryanaScripturesExperience from './HaryanaScripturesExperience';
+import ScripturesEntryTransition from './ScripturesEntryTransition';
 import AudioControl from './AudioControl';
 import audioManager from '../services/audioManager';
 
@@ -351,6 +352,7 @@ export default function StateHeritageAtlasPage({
   const [enteringTempleData, setEnteringTempleData] = useState(null);
   const [isEnteringFolkArts, setIsEnteringFolkArts] = useState(false);
   const [isEnteringLiterature, setIsEnteringLiterature] = useState(false);
+  const [isEnteringScriptures, setIsEnteringScriptures] = useState(false);
 
   // Dynamic Walkthrough States: Scroll depth & Architectural Guide Hotspots
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -486,11 +488,17 @@ export default function StateHeritageAtlasPage({
   };
 
   const handleOpenScriptures = () => {
+    if (isEnteringScriptures) return;
     audioManager.setGeneralWebsite();
     if (window.playTempleChime) window.playTempleChime();
     setStage('scriptures');
     window.history.pushState(null, '', '/haryana/scriptures');
     window.scrollTo({ top: 0, behavior: 'instant' });
+    setIsEnteringScriptures(true);
+  };
+
+  const handleScripturesTransitionComplete = () => {
+    setIsEnteringScriptures(false);
   };
 
   const handleCategoryItemClick = (categoryId, categoryLabel) => {
@@ -1009,11 +1017,20 @@ export default function StateHeritageAtlasPage({
         )}
       </AnimatePresence>
 
+      {/* Cinematic Sacred Manuscript Entry Transition into Scriptures ("Opening Ancient Knowledge") */}
+      <AnimatePresence>
+        {isEnteringScriptures && (
+          <ScripturesEntryTransition
+            onComplete={handleScripturesTransitionComplete}
+          />
+        )}
+      </AnimatePresence>
+
       {/* ====================================================================
           TOP NAVIGATION CONTROLS FOR GATE & TEMPLES ARCHIVE
-          (When in story mode, folk arts mode, or literature mode, each experience renders its own dedicated navigation)
+          (When in story mode, folk arts mode, literature mode, or scriptures mode, each experience renders its own dedicated navigation)
           ==================================================================== */}
-      {stage !== 'story' && stage !== 'folk-arts' && stage !== 'literature' && (
+      {stage !== 'story' && stage !== 'folk-arts' && stage !== 'literature' && stage !== 'scriptures' && (
         <header className="fixed top-5 left-5 right-5 sm:left-8 sm:right-8 z-50 flex items-center justify-between pointer-events-none">
           <div className="flex items-center gap-3 pointer-events-auto">
             {stage === 'temples-archive' ? (
@@ -1661,6 +1678,8 @@ export default function StateHeritageAtlasPage({
           onBackToGate={handleBackToGate}
           onNavigateToLiterature={handleOpenLiterature}
           onNavigateToTemples={handleOpenTemplesArchive}
+          onReturnToMap={onReturnToMap}
+          onReliveJourney={onReliveJourney}
         />
       )}
 

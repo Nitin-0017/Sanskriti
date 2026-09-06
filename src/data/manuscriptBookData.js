@@ -9,13 +9,16 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'BHAGAVAD GITA',
     sanskritTitle: 'श्रीमद्भगवद्गीता',
     subtitle: 'The Song of the Divine Lord at Kurukshetra',
+    shelfSubtitle: 'योग · कर्म · ज्ञान',
+    shelfDate: 'c. 2nd BCE',
+    description: 'Spoken by Sri Krishna to Arjuna amidst the opposing armies on the sacred plain of Haryana, the Bhagavad Gita synthesizes duty, devotion, and cosmic wisdom into an eternal counsel for human life.',
     accessionCode: 'MSS-KUR-001',
     period: 'c. 400–200 BCE',
     region: 'Kurukshetra, Haryana',
     script: 'Early Devanagari (Sharada influence)',
     substrate: 'Himalayan Birch Bark & Desi Paper',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #1c0c05 0%, #2f170a 35%, #180903 70%, #251006 100%)',
+      bgGradient: 'linear-gradient(135deg, #2b110a 0%, #441c10 35%, #1f0b06 70%, #30140c 100%)',
       borderColor: '#c5a059',
       spineRibs: '#ffd27d',
       cordColor: 'linear-gradient(to bottom, #9e2318 0%, #63120b 50%, #380804 100%)',
@@ -35,7 +38,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
         leftContent: {
           title: 'SACRED SRI YANTRA & CONSECRATION',
           sanskrit: 'ॐ नमो भगवते वासुदेवाय',
-          caption: 'Consecration frontispiece inscribed with natural cinnabar and lampblack soot.'
+          caption: 'Consecration frontispiece inscribed with natural cinnabar and lampblack soot.',
+          illuminationNote: 'Natural vermilion and gold leaf border. Kurukshetra monastic school.',
+          provenanceNote: 'Preserved in the subterranean vaults of Thanesar along the sacred Saraswati.'
         },
         rightContent: {
           heading: 'THE SACRED GRANTHA',
@@ -47,6 +52,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
           verseSanskrit: 'ॐ पार्थाय प्रतिबोधितां भगवता नारायणेन स्वयं\nव्यासेन ग्रथितां पुराणमुनिना मध्येमहाभारतम्॥',
           transliteration: 'om pārthāya pratibodhitāṁ bhagavatā nārāyaṇena svayaṁ\nvyāsena grathitāṁ purāṇa-muninā madhye-mahābhāratam ||',
           translation: '“Om, which was taught to Arjuna by the Supreme Lord Narayana Himself, and recorded by the ancient sage Vyasa within the Mahabharata.”',
+          archivalNote: 'This opening folium serves as the traditional Mangalacharana—an auspicious invocation consecrating the transcription before scholarly study.',
+          scribeAnnotation: 'Inscribed in classical Anushtubh meter using chiseled reed kalam and carbonized lampblack ink.',
+          contextExplanation: 'The verse establishes the divine lineage of the dialogue: spoken by the Divine, received by the seeker Arjuna, and preserved by Sage Vyasa.',
           archivalNotes: {
             period: 'c. 400–200 BCE',
             region: 'Kurukshetra',
@@ -66,7 +74,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
         leftContent: {
           title: 'THE SACRED PLAIN OF KURUKSHETRA',
           sanskrit: 'कुरुक्षेत्रे सरस्वती तीर्थे',
-          caption: 'Sage Vyasa reciting the battle chronicle beside the holy Saraswati river.'
+          caption: 'Sage Vyasa reciting the battle chronicle beside the holy Saraswati river.',
+          illuminationNote: 'Mineral lapis lazuli and earth ochre pigment. Northern redaction.',
+          provenanceNote: 'Historical 48-Kos pilgrimage circuit of Kurukshetra plain, Haryana.'
         },
         rightContent: {
           heading: 'BHAGAVAD GITA',
@@ -78,6 +88,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
           verseSanskrit: 'धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः।\nमामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय॥',
           transliteration: 'dharma-kṣetre kuru-kṣetre samavetā yuyutsavaḥ |\nmāmakāḥ pāṇḍavāś caiva kim akurvata sañjaya ||',
           translation: '“O Sanjaya, assembled on the sacred field of Kurukshetra, eager for battle, what did my sons and the sons of Pandu do?”',
+          archivalNote: 'The very first word of the text is Dharma, establishing that the entire epic is an inquiry into ethical conduct under existential crisis.',
+          scribeAnnotation: 'Rubricated red punctuation marks denote the caesura of the eight-syllable hemistich.',
+          contextExplanation: 'King Dhritarashtra inquires about the gathering of the armies, revealing his anxiety and internal bias toward his own sons.',
           archivalNotes: {
             period: 'c. 400–200 BCE',
             region: 'Kurukshetra',
@@ -97,7 +110,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
         leftContent: {
           title: 'ŚRĪ KṚṢṆA UPADESHA TO ARJUNA',
           sanskrit: 'पार्थसारथि संवाद',
-          caption: 'Illumination: Bhagavan Sri Krishna counselling Arjuna amidst opposing armies under the Jyotisar Banyan tree.'
+          caption: 'Illumination: Bhagavan Sri Krishna counselling Arjuna amidst opposing armies under the Jyotisar Banyan tree.',
+          illuminationNote: 'Natural mineral pigments: lapis lazuli, cinnabar, and gold leaf. Kurukshetra school.',
+          provenanceNote: 'Jyotisar, Kurukshetra plain, Haryana. Redacted by monastic copyists.'
         },
         rightContent: {
           heading: 'BHAGAVAD GITA',
@@ -109,6 +124,9 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
           verseSanskrit: 'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥',
           transliteration: 'karmaṇye vādhikāras te mā phaleṣu kadācana |\nmā karma-phala-hetur bhūr mā te saṅgo ’stv akarmaṇi ||',
           translation: '“You have the right to action alone, never to the fruits of action. Let not the fruit of action be your motive, nor let your attachment be to inaction.”',
+          archivalNote: 'This passage belongs to a larger philosophical dialogue concerning duty, action and detachment. Spoken on the battlefield of Kurukshetra, it defines the timeless doctrine of Nishkama Karma.',
+          scribeAnnotation: 'Inscribed in classical Anushtubh meter (8 syllables per quarter) using chiseled reed kalam and carbonized lampblack soot.',
+          contextExplanation: 'You have authority over your conscious action, but never unilateral ownership over outcomes. Acting without selfish clinging to results frees the mind from existential anxiety.',
           archivalNotes: {
             period: 'c. 400–200 BCE',
             region: 'Kurukshetra',
@@ -187,20 +205,22 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'RAMAYANA',
     sanskritTitle: 'श्रीमद्वाल्मीकिरामायणम्',
     subtitle: 'The Adi Kavya: The Epic of Dharma & Righteous Life',
+    shelfSubtitle: 'धर्म · मर्यादा · आदर्श',
+    shelfDate: 'c. 1st BCE',
     accessionCode: 'MSS-AYO-002',
     period: 'c. 500 BCE',
     region: 'Ayodhya & Northern Recensions',
     script: 'Archaic Devanagari & Mithilakshar',
     substrate: 'Treated Palm Leaf (Tala-patra) with Vermilion',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #2b0e04 0%, #451b08 35%, #220a02 70%, #361405 100%)',
-      borderColor: '#d48d3b',
-      spineRibs: '#f5b061',
-      cordColor: 'linear-gradient(to bottom, #b84314 0%, #7d2605 50%, #4a1301 100%)',
-      sealColor: 'radial-gradient(circle at 35% 35%, #b84314 0%, #7d2605 60%, #421101 100%)',
+      bgGradient: 'linear-gradient(135deg, #152216 0%, #1e2f1f 35%, #101a11 70%, #19271a 100%)',
+      borderColor: '#c4a45a',
+      spineRibs: '#d5b770',
+      cordColor: 'linear-gradient(to bottom, #2b4528 0%, #192e17 50%, #0d1a0c 100%)',
+      sealColor: 'radial-gradient(circle at 35% 35%, #2a4727 0%, #1b3019 60%, #0d1c0c 100%)',
       sealEmblem: '🏹',
       sealLabel: 'SEAL OF DHARMA',
-      accentColor: '#f5b061'
+      accentColor: '#d5b770'
     },
     shelfBadge: 'MSS · ०२',
     folios: [
@@ -335,20 +355,22 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'MAHABHARATA',
     sanskritTitle: 'श्रीमन्महाभारतम्',
     subtitle: 'Jaya: The Hundred-Thousand Verse Epic of Civilization',
+    shelfSubtitle: 'धर्म · संघर्ष · नीति',
+    shelfDate: 'c. 3rd BCE',
     accessionCode: 'MSS-HAS-003',
     period: 'c. 800–400 BCE',
     region: 'Kurukshetra, Hastinapura & Indraprastha',
     script: 'Early Devanagari & Sharada',
     substrate: 'Old Desi Sanganeri Paper & Birch Bark',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #180806 0%, #2f100c 35%, #130504 70%, #250b07 100%)',
-      borderColor: '#bf705c',
-      spineRibs: '#e8917d',
-      cordColor: 'linear-gradient(to bottom, #78170c 0%, #470d06 50%, #290602 100%)',
-      sealColor: 'radial-gradient(circle at 35% 35%, #841b0f 0%, #470d06 60%, #260502 100%)',
+      bgGradient: 'linear-gradient(135deg, #131110 0%, #201b19 35%, #0e0c0b 70%, #181413 100%)',
+      borderColor: '#bda066',
+      spineRibs: '#d5ba7b',
+      cordColor: 'linear-gradient(to bottom, #382d20 0%, #211911 50%, #100c07 100%)',
+      sealColor: 'radial-gradient(circle at 35% 35%, #3d2f1f 0%, #211911 60%, #0d0a07 100%)',
       sealEmblem: '☸',
       sealLabel: 'SEAL OF JAYA',
-      accentColor: '#e8917d'
+      accentColor: '#d5ba7b'
     },
     shelfBadge: 'MSS · ०३',
     folios: [
@@ -483,20 +505,22 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'THE VEDAS',
     sanskritTitle: 'ऋग्वेद संहिता · चतुर्वेद',
     subtitle: 'The Primordial Shruti: Cosmic Hymns of the Risis',
+    shelfSubtitle: 'श्रुति · सूक्तज्ञान',
+    shelfDate: 'c. 1500 BCE',
     accessionCode: 'MSS-SAR-004',
     period: 'c. 1500–1200 BCE',
     region: 'Saraswati Valley & Saptasindhu Plain',
     script: 'Archaic Vedic Sanskrit (Accentuated Sharada & Devanagari)',
     substrate: 'Ancient Kashmir Birch Bark (Bhurjapatra)',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #241608 0%, #3b240e 35%, #1d1105 70%, #2e1c09 100%)',
-      borderColor: '#d4af37',
-      spineRibs: '#ffe082',
-      cordColor: 'linear-gradient(to bottom, #996e1a 0%, #614309 50%, #382502 100%)',
-      sealColor: 'radial-gradient(circle at 35% 35%, #b3821e 0%, #6b4d0e 60%, #332303 100%)',
-      sealEmblem: '☀️',
+      bgGradient: 'linear-gradient(135deg, #241608 0%, #38220d 35%, #1a0f05 70%, #2a190a 100%)',
+      borderColor: '#c9a454',
+      spineRibs: '#e0bc6d',
+      cordColor: 'linear-gradient(to bottom, #8a5e17 0%, #54390a 50%, #2d1d03 100%)',
+      sealColor: 'radial-gradient(circle at 35% 35%, #94681a 0%, #593e0b 60%, #2b1c03 100%)',
+      sealEmblem: '🔥',
       sealLabel: 'SEAL OF SHRU-TI',
-      accentColor: '#ffe082'
+      accentColor: '#e0bc6d'
     },
     shelfBadge: 'MSS · ०४',
     folios: [
@@ -631,20 +655,22 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'THE UPANISHADS',
     sanskritTitle: 'ईशावास्योपनिषद् एवं वेदान्त',
     subtitle: 'The Secret Whispers of the Self: The Summit of Vedanta',
+    shelfSubtitle: 'आत्मन् · ब्रह्म · सत्य',
+    shelfDate: 'c. 800 BCE',
     accessionCode: 'MSS-NAI-005',
     period: 'c. 800–500 BCE',
     region: 'Naimisharanya, Kashi & Kurukshetra',
     script: 'Classical Devanagari',
     substrate: 'Old Kashmir Palm Leaf & Desi Vellum',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #0a0d16 0%, #151a2e 35%, #080b12 70%, #101625 100%)',
-      borderColor: '#7a96d1',
-      spineRibs: '#a4befa',
-      cordColor: 'linear-gradient(to bottom, #1d2c52 0%, #0f1933 50%, #060a14 100%)',
-      sealColor: 'radial-gradient(circle at 35% 35%, #253966 0%, #14203d 60%, #080d1a 100%)',
-      sealEmblem: '🪷',
+      bgGradient: 'linear-gradient(135deg, #0e1522 0%, #172235 35%, #090e18 70%, #121b2b 100%)',
+      borderColor: '#c4a559',
+      spineRibs: '#dcbf72',
+      cordColor: 'linear-gradient(to bottom, #1d2b45 0%, #10192b 50%, #070c17 100%)',
+      sealColor: 'radial-gradient(circle at 35% 35%, #233454 0%, #131e33 60%, #080d17 100%)',
+      sealEmblem: '🌳',
       sealLabel: 'SEAL OF ATMAN',
-      accentColor: '#a4befa'
+      accentColor: '#dcbf72'
     },
     shelfBadge: 'MSS · ०५',
     folios: [
@@ -748,20 +774,22 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
     title: 'THE PURANAS',
     sanskritTitle: 'श्रीविष्णुपुराणम् एवं महापुराणाः',
     subtitle: 'Cosmic Chronologies & Sacred Heritage of the Saraswati',
+    shelfSubtitle: 'सृष्टि · वंश · स्मृति',
+    shelfDate: 'c. 500 CE',
     accessionCode: 'MSS-BAD-006',
     period: 'c. 300–800 CE',
     region: 'Kurukshetra, Pehowa & Badrikashrama',
     script: 'Medieval Devanagari',
     substrate: 'Old Desi Sanganeri Paper with Ochre Rubrication',
     coverStyle: {
-      bgGradient: 'linear-gradient(135deg, #1f1207 0%, #331d0b 35%, #170d04 70%, #291708 100%)',
-      borderColor: '#d48a37',
-      spineRibs: '#f5b567',
-      cordColor: 'linear-gradient(to bottom, #8a4812 0%, #522907 50%, #291302 100%)',
-      sealColor: 'radial-gradient(circle at 35% 35%, #945016 0%, #522907 60%, #261102 100%)',
-      sealEmblem: '🐚',
+      bgGradient: 'linear-gradient(135deg, #260f16 0%, #3a1522 35%, #1c0a10 70%, #2b1019 100%)',
+      borderColor: '#c79a52',
+      spineRibs: '#dfb770',
+      cordColor: 'linear-gradient(to bottom, #521827 0%, #300d16 50%, #17050a 100%)',
+      sealColor: 'radial-gradient(circle at 35% 35%, #591d2c 0%, #330f18 60%, #17060b 100%)',
+      sealEmblem: '🪷',
       sealLabel: 'SEAL OF PURANA',
-      accentColor: '#f5b567'
+      accentColor: '#dfb770'
     },
     shelfBadge: 'MSS · ०६',
     folios: [
@@ -866,6 +894,38 @@ export const SACRED_MANUSCRIPTS_COLLECTION = [
 // COMPREHENSIVE SCRIPTURE WORDS GLOSSARY (SCHOLASTIC ETYMOLOGY)
 // ============================================================================
 export const SCRIPTURE_WORDS_GLOSSARY = {
+  'कर्मण्येवाधिकारस्ते': {
+    word: 'कर्मण्येवाधिकारस्ते',
+    transliteration: 'karmaṇy evādhikāras te',
+    literal: 'In action alone is your rightful claim',
+    meaning: 'You have sovereignty over your duty, but not over the fruits.',
+    context: 'Compound of karmaṇi (in action) + eva (alone) + adhikāraḥ (sovereign right) + te (belonging to you). The cornerstone of non-attached duty.',
+    significance: 'The core thesis of the Bhagavad Gita on selfless work (Nishkama Karma).'
+  },
+  'कर्मण्येव': {
+    word: 'कर्मण्येव',
+    transliteration: 'karmaṇy eva',
+    literal: 'In action alone',
+    meaning: 'Exclusively in performing one’s prescribed duty.',
+    context: 'Karmaṇi + eva. The indeclinable particle eva emphasizes that human agency is restricted solely to the execution of righteous work.',
+    significance: 'Exclusivity of human responsibility.'
+  },
+  'कर्मफलहेतुर्भूर्मा': {
+    word: 'कर्मफलहेतुर्भूर्मा',
+    transliteration: 'mā karma-phala-hetur bhūḥ',
+    literal: 'Never be motivated by the fruit of action',
+    meaning: 'Let not personal reward or outcome be your driving motive.',
+    context: 'Karma-phala (fruit of deed) + hetuḥ (causative motive) + bhūḥ (become) + mā (not). Advises the actor to purify the mind of transactional anxiety.',
+    significance: 'Dissociation of ego from outcome.'
+  },
+  'सङ्गोऽस्त्वकर्मणि': {
+    word: 'सङ्गोऽस्त्वकर्मणि',
+    transliteration: 'mā te saṅgo ’stv akarmaṇi',
+    literal: 'Nor let your attachment be to inaction',
+    meaning: 'Never allow detachment to degrade into sloth, fatalism, or abandonment of duty.',
+    context: 'Saṅgaḥ (attachment) + astu (let there be) + akarmaṇi (in inaction). A direct warning against escapism.',
+    significance: 'Condemnation of defeatism and withdrawal from life.'
+  },
   'कर्मणि': {
     word: 'कर्मणि',
     transliteration: 'karmaṇi',
