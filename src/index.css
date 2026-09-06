@@ -56,6 +56,69 @@
   font-family: var(--font-handwriting);
 }
 
+.font-eb-garamond {
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-devanagari {
+  font-family: 'Noto Serif Devanagari', 'Rozha One', serif;
+}
+
+/* AUTHENTIC 500-YEAR-OLD AGED MANUSCRIPT PAPER MATERIAL */
+.manuscript-paper-aged {
+  background-color: #dfc79b;
+  background-image:
+    /* Age oxidation and antique water stains */
+    radial-gradient(ellipse at 86% 14%, rgba(115, 68, 22, 0.22) 0%, transparent 48%),
+    radial-gradient(ellipse at 14% 86%, rgba(105, 62, 18, 0.24) 0%, transparent 52%),
+    radial-gradient(circle at 75% 65%, rgba(135, 82, 28, 0.14) 0%, transparent 35%),
+    radial-gradient(circle at 25% 35%, rgba(135, 82, 28, 0.12) 0%, transparent 40%),
+    /* Aged amber/ochre paper base with burnt edges */
+    radial-gradient(circle at 50% 50%, #e8d3ad 0%, #dbbf92 45%, #caaa78 75%, #b18c53 100%),
+    /* Micro paper fiber cross-grain */
+    repeating-linear-gradient(35deg, rgba(100, 65, 25, 0.035) 0px, rgba(100, 65, 25, 0.035) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(-55deg, rgba(100, 65, 25, 0.03) 0px, rgba(100, 65, 25, 0.03) 1px, transparent 1px, transparent 4px);
+  box-shadow: 
+    inset 0 0 60px rgba(85, 48, 14, 0.48),
+    inset 0 0 20px rgba(60, 32, 8, 0.55),
+    inset 1px 1px 2px rgba(255, 230, 180, 0.2);
+}
+
+.manuscript-paper-left {
+  box-shadow: 
+    inset -35px 0 45px -8px rgba(25, 10, 3, 0.55),
+    inset 0 0 45px rgba(85, 48, 14, 0.42),
+    inset 0 0 16px rgba(60, 32, 8, 0.5);
+}
+
+.manuscript-paper-right {
+  box-shadow: 
+    inset 35px 0 45px -8px rgba(25, 10, 3, 0.55),
+    inset 0 0 45px rgba(85, 48, 14, 0.42),
+    inset 0 0 16px rgba(60, 32, 8, 0.5);
+}
+
+/* Authentic Walnut/Carbon Manuscript Ink with Micro Bleed */
+.manuscript-ink-primary {
+  color: #211107;
+  text-shadow: 0 0 0.35px rgba(33, 17, 7, 0.55);
+}
+
+.manuscript-ink-secondary {
+  color: #5c3814;
+  text-shadow: 0 0 0.3px rgba(92, 56, 20, 0.4);
+}
+
+.manuscript-ink-sanskrit {
+  color: #1a0a03;
+  text-shadow: 0 0 0.5px rgba(26, 10, 3, 0.65);
+  font-family: 'Noto Serif Devanagari', 'Rozha One', serif;
+}
+
 /* Archival Document & Manuscript Styles */
 .archival-ruled-lines {
   background-image: repeating-linear-gradient(
@@ -416,4 +479,275 @@
 .heritage-energy-line {
   animation: goldenEnergyBreathe 4s ease-in-out infinite;
 }
+
+/* ==========================================================================
+   LITERARY RIVER & ARCHIVAL TIMELINE ANIMATIONS
+   Hand-crafted manuscript flow, traveling ink particles, warm archival halos
+   ========================================================================== */
+@keyframes riverPathShimmer {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes riverMoteDrift {
+  0% {
+    transform: translateY(0px) scale(0.85);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.15);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-16px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes archivalHaloPulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+}
+
+@keyframes archivalRingExpand {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.river-mote {
+  animation: riverMoteDrift 3.2s ease-in-out infinite;
+}
+
+.archival-halo {
+  animation: archivalHaloPulse 3.6s ease-in-out infinite;
+}
+
+.archival-ring-pulse {
+  animation: archivalRingExpand 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+/* Cinematic Gateway Transition Animations */
+@keyframes riverStreamFlow {
+  0% {
+    height: 0px;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    height: 90px;
+    opacity: 0.95;
+  }
+}
+
+.river-stream-flow {
+  animation: riverStreamFlow 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes particleCascade1 {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(85px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes particleCascade2 {
+  0% {
+    transform: translateY(0) translateX(-6px) scale(0.4);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(75px) translateX(4px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes particleCascade3 {
+  0% {
+    transform: translateY(0) translateX(6px) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(92px) translateX(-3px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.cascade-particle-1 {
+  animation: particleCascade1 1.1s ease-out infinite;
+}
+
+.cascade-particle-2 {
+  animation: particleCascade2 1.2s 0.15s ease-out infinite;
+}
+
+.cascade-particle-3 {
+  animation: particleCascade3 1.0s 0.3s ease-out infinite;
+}
+
+@keyframes gatewayButtonAura {
+  0% {
+    box-shadow: 0 0 25px rgba(255, 210, 125, 0.35);
+    border-color: #ffd27d;
+  }
+  50% {
+    box-shadow: 0 0 65px rgba(255, 210, 125, 0.95), inset 0 0 25px rgba(255, 210, 125, 0.45);
+    border-color: #fff0d0;
+  }
+  100% {
+    box-shadow: 0 0 45px rgba(255, 210, 125, 0.75);
+    border-color: #ffd27d;
+  }
+}
+
+.gateway-illuminated {
+  animation: gatewayButtonAura 1.2s ease-in-out forwards;
+}
+
+/* ============================================================================
+   CINEMATIC ANTIQUE PARCHMENT SCROLL REVEAL STYLES
+   ============================================================================ */
+.parchment-paper {
+  background: 
+    radial-gradient(ellipse at 50% 50%, rgba(253, 248, 235, 0.98) 0%, rgba(240, 224, 190, 0.96) 60%, rgba(205, 172, 120, 0.94) 88%, rgba(125, 78, 38, 0.98) 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(160, 110, 60, 0.035) 4px);
+  box-shadow: 
+    inset 0 25px 35px -10px rgba(70, 35, 12, 0.65),
+    inset 0 -25px 35px -10px rgba(70, 35, 12, 0.65),
+    inset 20px 0 25px -10px rgba(70, 35, 12, 0.4),
+    inset -20px 0 25px -10px rgba(70, 35, 12, 0.4),
+    0 30px 90px rgba(0, 0, 0, 0.95),
+    0 0 120px rgba(212, 175, 55, 0.18);
+  border-left: 2px solid rgba(138, 86, 42, 0.55);
+  border-right: 2px solid rgba(138, 86, 42, 0.55);
+}
+
+/* Wooden Roller with Antique Brass Caps */
+.parchment-roller-wood {
+  background: linear-gradient(180deg, #1d0c05 0%, #462210 25%, #7a4120 50%, #3d1b0b 75%, #160803 100%);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.9),
+    inset 0 2px 2px rgba(255, 230, 180, 0.35),
+    inset 0 -2px 2px rgba(0, 0, 0, 0.8);
+}
+
+.parchment-roller-finial {
+  background: linear-gradient(135deg, #a67c33 0%, #ffeaa7 45%, #d4af37 70%, #684814 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Organic deckled edge simulation */
+.parchment-deckle-edge {
+  background-image: radial-gradient(circle at 100% 50%, transparent 6px, rgba(160, 110, 60, 0.4) 7px);
+}
+
+/* Particle gathering animation */
+@keyframes particleDriftInward {
+  0% {
+    transform: translate(var(--drift-x, 0px), var(--drift-y, 0px)) scale(0.3);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.2;
+  }
+}
+
+.particle-drift-in {
+  animation: particleDriftInward 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* River current drawing along parchment */
+@keyframes parchmentRiverStroke {
+  0% {
+    stroke-dashoffset: 1400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.parchment-river-flowing {
+  stroke-dasharray: 1400;
+  animation: parchmentRiverStroke 2.2s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+}
+
+/* Golden Milestone Pulse */
+@keyframes milestoneGlowPulse {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(255, 210, 125, 0.9), inset 0 0 10px rgba(255, 210, 125, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 14px rgba(255, 210, 125, 0.5);
+  }
+}
+
+.milestone-illuminated {
+  animation: milestoneGlowPulse 0.8s ease-out forwards;
+}
+
+/* Bottom Roller Light Cascade */
+@keyframes riverEscapePour {
+  0% {
+    height: 0px;
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    height: 180px;
+    opacity: 0.95;
+    transform: translateY(20px);
+  }
+}
+
+.river-escape-pour {
+  animation: riverEscapePour 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
 

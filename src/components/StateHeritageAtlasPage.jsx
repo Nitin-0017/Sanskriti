@@ -8,6 +8,7 @@ import FolkArtsExperience from './FolkArtsExperience';
 import FolkArtsEntryTransition from './FolkArtsEntryTransition';
 import LiteratureEntryTransition from './LiteratureEntryTransition';
 import HaryanaLiteratureExperience from './HaryanaLiteratureExperience';
+import HaryanaScripturesExperience from './HaryanaScripturesExperience';
 import AudioControl from './AudioControl';
 import audioManager from '../services/audioManager';
 
@@ -314,10 +315,11 @@ export default function StateHeritageAtlasPage({
   onReturnToMap, 
   onReliveJourney 
 }) {
-  // Stage states: 'gate' | 'temples-archive' | 'story' | 'folk-arts' | 'literature'
+  // Stage states: 'gate' | 'temples-archive' | 'story' | 'folk-arts' | 'literature' | 'scriptures'
   const [stage, setStage] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
+      if (path.includes('/scriptures')) return 'scriptures';
       if (path.includes('/literature')) return 'literature';
       if (path.includes('/folk-arts')) return 'folk-arts';
       if (path.includes('/temples/')) return 'story';
@@ -375,7 +377,9 @@ export default function StateHeritageAtlasPage({
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname;
-      if (path.includes('/literature')) {
+      if (path.includes('/scriptures')) {
+        setStage('scriptures');
+      } else if (path.includes('/literature')) {
         setStage('literature');
       } else if (path.includes('/folk-arts')) {
         setStage('folk-arts');
@@ -481,6 +485,14 @@ export default function StateHeritageAtlasPage({
     setIsEnteringLiterature(false);
   };
 
+  const handleOpenScriptures = () => {
+    audioManager.setGeneralWebsite();
+    if (window.playTempleChime) window.playTempleChime();
+    setStage('scriptures');
+    window.history.pushState(null, '', '/haryana/scriptures');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   const handleCategoryItemClick = (categoryId, categoryLabel) => {
     if (categoryId === 'temples') {
       handleOpenTemplesArchive();
@@ -488,6 +500,8 @@ export default function StateHeritageAtlasPage({
       handleOpenFolkArts();
     } else if (categoryId === 'literature') {
       handleOpenLiterature();
+    } else if (categoryId === 'scriptures') {
+      handleOpenScriptures();
     } else {
       if (window.playTempleChime) window.playTempleChime();
       setToastMessage(`${categoryLabel} — Curatorial preservation in progress. This archive will open soon.`);
@@ -1608,6 +1622,7 @@ export default function StateHeritageAtlasPage({
       {stage === 'folk-arts' && (
         <FolkArtsExperience
           onBackToGate={handleBackToGate}
+          onOpenLiterature={handleOpenLiterature}
         />
       )}
 
@@ -1634,6 +1649,18 @@ export default function StateHeritageAtlasPage({
             window.history.pushState(null, '', '/haryana/folk-arts/artisans');
             window.scrollTo({ top: 0, behavior: 'instant' });
           }}
+        />
+      )}
+
+      {/* ====================================================================
+          STAGE 7: IMMERSIVE SCRIPTURES OF HARYANA ARCHIVE
+          (The Sacred Word • The Knowledge River • Open Manuscript • Explorer • Verses • The Chamber)
+          ==================================================================== */}
+      {stage === 'scriptures' && (
+        <HaryanaScripturesExperience
+          onBackToGate={handleBackToGate}
+          onNavigateToLiterature={handleOpenLiterature}
+          onNavigateToTemples={handleOpenTemplesArchive}
         />
       )}
 
